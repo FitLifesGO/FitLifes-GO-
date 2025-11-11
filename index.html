@@ -46,6 +46,11 @@
 
     header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(180deg, rgba(0,0,0,0.06), transparent);backdrop-filter: blur(6px);position:sticky;top:0;z-index:40}
     .brand{display:flex;gap:12px;align-items:center;color:var(--accent)}
+    /* NUEVO: Estilos para el logo */
+    .brand img {
+        height: 30px; /* Ajusta el tamaño del logo según sea necesario */
+        width: auto;
+    }
     .brand h1{margin:0;font-size:1.1rem;color:inherit}
 
     .desktop-nav{display:flex;gap:12px;align-items:center}
@@ -283,7 +288,21 @@
     .log-entry-date{font-weight:700; color:var(--accent-2);}
     .log-entry ul{padding-left:20px; margin-bottom:0;}
 
-    footer{padding:18px;text-align:center;color:var(--muted)}
+    /* NUEVO: Estilos para el footer */
+    footer{
+        padding:28px;
+        text-align:center;
+        color:var(--muted);
+        margin-top: 30px; /* Separación de la sección Contacto */
+        border-top: 1px solid var(--glass);
+    }
+    footer p {
+        margin: 5px 0;
+    }
+    footer strong {
+        color: var(--accent);
+    }
+
 
     /* ====================
         NUEVO: Mejoras Responsive
@@ -330,7 +349,10 @@
 </head>
 <body data-theme="dark">
   <header>
-    <div class="brand"><i class="fa-solid fa-dumbbell"></i><h1>FitLifes¡GO!</h1></div>
+    <div class="brand">
+        <img src="logos/FitLifesGoLOGO.png" alt="FitLifes¡GO! Logo">
+        <h1>FitLifes¡GO!</h1>
+    </div>
     
     <nav class="desktop-nav">
       <a href="#inicio">Inicio</a>
@@ -338,6 +360,7 @@
       <a href="#dietas">Dietas</a>
       <a href="#diario">Diario</a>
       <a href="#contacto">Contacto</a>
+      <a href="#creditos">Créditos</a>
     </nav>
     <div class="desktop-controls">
       <button id="themeToggle" class="btn secondary" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
@@ -352,7 +375,7 @@
     <section class="hero" id="inicio">
       <div class="card">
         <h2>Entrena con propósito, come con intención</h2>
-        <p>Planes personalizados, calculadoras, seguimiento y un sistema visual de dietas con gráficos circulares para entender tus macros de forma rápida.</p>
+        <p>Planes personalizados, calculadoras, seguimiento y un sistema visual de dietas con gráficos para entender tus macros de forma rápida.</p>
         <div class="hero-buttons">
           <button class="btn" onclick="document.getElementById('planes').scrollIntoView({behavior:'smooth'})">Ver Planes</button>
           <button class="btn secondary" onclick="document.getElementById('diario').scrollIntoView({behavior:'smooth'})">Mi Diario</button>
@@ -534,10 +557,21 @@
       </form>
     </section>
 
+    <section id="creditos" class="card" data-aos="fade-up">
+        <h3>Créditos</h3>
+        <p><strong>Escuela:</strong> CBTis N. 132, Hermosillo Sonora México</p>
+        <p><strong>Desarrolladores:</strong></p>
+        <ul>
+            <li>Jonathan Alexis Payan Enriquez</li>
+            <li>Sebastian Teran Rubio</li>
+        </ul>
+        <p><strong>Desarrollador Principal:</strong> Jesus Abraham Lopez Gutierrez</p>
+    </section>
+
   </main>
 
   <footer>
-    © 2025 FitLifes¡GO! • Aplicación de Fitness • Política de Privacidad
+    <p>© 2025 FitLifes¡GO! • CBTis Fit App • Política de Privacidad</p>
   </footer>
 
   <div id="wizard-modal" class="modal-overlay">
@@ -624,6 +658,7 @@
         <a href="#dietas" class="mobile-link">Dietas</a>
         <a href="#diario" class="mobile-link">Diario</a>
         <a href="#contacto" class="mobile-link">Contacto</a>
+        <a href="#creditos" class="mobile-link">Créditos</a>
         <hr>
         <button id="mobile-profile-btn">Mi Perfil</button>
         <button id="mobile-theme-btn">Cambiar Tema</button>
@@ -1046,7 +1081,7 @@
   });
 
   // ====================
-  // NUEVO: Lógica del Menú Móvil
+  // Lógica del Menú Móvil
   // ====================
   const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
   
