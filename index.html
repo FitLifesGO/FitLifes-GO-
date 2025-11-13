@@ -243,7 +243,7 @@
     }
     #profile-header-card h2 {
         margin: 0;
-        color: white; /* Mejor que el color por defecto */
+        color: white;
     }
     #profile-header-card p {
         margin: -10px 0 0 0;
@@ -286,7 +286,7 @@
         padding: 8px 5px;
         border-radius: 8px;
         transition: color 0.2s ease, background 0.2s ease;
-        flex: 1; /* Para que ocupen espacio */
+        flex: 1;
     }
     .tab-btn i { font-size: 1.3rem; margin-bottom: 4px; }
     .tab-btn.active { color: var(--accent); }
@@ -305,7 +305,6 @@
       .main-col, .sidebar-col { grid-column: auto; }
       .card[data-aos] { margin-top: 16px; }
       
-      /* Ocultar hero y sidebar-card en móvil (ya están en pestañas) */
       .hero, #tracker-desktop-card { display: none; }
       #tracker-mobile-card { display: block; }
 
@@ -315,7 +314,6 @@
       
       .form-row { flex-direction: column; }
     }
-    /* Ocultar el tracker móvil en desktop */
     @media (min-width: 901px) {
         #tracker-mobile-card { display: none; }
     }
@@ -789,7 +787,6 @@
       });
       document.getElementById(pageId).classList.add('active');
 
-      // Actualizar estado activo en la navegación
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       const mobileBtnId = 'nav-' + pageId.split('-')[1];
       const mobileBtn = document.getElementById(mobileBtnId);
@@ -849,7 +846,7 @@
   // Función de ayuda para altura
   function processHeight(heightStr) {
       let height = String(heightStr).replace(',', '.');
-      if (height && parseFloat(height) > 0 && parseFloat(height) < 3) { // Asume que "1.72" es metros
+      if (height && parseFloat(height) > 0 && parseFloat(height) < 3) {
           height = (parseFloat(height) * 100).toFixed(0);
       }
       return height;
@@ -875,12 +872,11 @@
       
       if(dietId) {
           const dietName = DATABASE.diets[dietId]?.title || 'Balanceada';
-          selectDiet(dietName, dietId, true); // true para silenciar el alert
+          selectDiet(dietName, dietId, true);
       }
 
       closeWizard();
       
-      // PREGUNTAR POR TUTORIAL
       if (confirm("¡Bienvenido, " + name + "! Tu perfil está configurado. ¿Quieres ver un tour rápido de la app?")) {
           startTutorial();
       }
@@ -943,33 +939,22 @@
     localStorage.setItem('fitlife_profile', JSON.stringify(p));
     alert('Métricas guardadas');
     loadProfile();
-    // Actualizar el valor del input de altura por si era "1.72"
     document.getElementById('height').value = height;
   }
   document.getElementById('saveProfile').addEventListener('click', saveProfile);
   
   function loadProfile() {
-      // Cargar foto de perfil
       loadProfilePic();
       
       const u = JSON.parse(localStorage.getItem('fitlife_user') || 'null');
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
       
-      // 1. Cargar Tarjeta de Perfil
       if (p && u) {
           document.getElementById('profile-card-name').textContent = u.name;
           document.getElementById('profile-card-height').textContent = p.height || '--';
           document.getElementById('profile-card-weight').textContent = p.weight || '--';
           document.getElementById('profile-card-goal').textContent = p.goal ? (p.goal.charAt(0).toUpperCase() + p.goal.slice(1)) : '--';
-      } else {
-          document.getElementById('profile-card-name').textContent = 'Completa tu Perfil';
-          document.getElementById('profile-card-height').textContent = '--';
-          document.getElementById('profile-card-weight').textContent = '--';
-          document.getElementById('profile-card-goal').textContent = '--';
-      }
 
-      // 2. Cargar Panel de Métricas (si existe perfil)
-      if(p){ 
           document.getElementById('age').value = p.age; 
           document.getElementById('height').value = p.height; 
           document.getElementById('weight').value = p.weight; 
@@ -984,9 +969,13 @@
 
           calculateIMC(); 
           calculateCalories(p.activity, p.goal);
+      } else {
+          document.getElementById('profile-card-name').textContent = 'Completa tu Perfil';
+          document.getElementById('profile-card-height').textContent = '--';
+          document.getElementById('profile-card-weight').textContent = '--';
+          document.getElementById('profile-card-goal').textContent = '--';
       }
 
-      // 3. Cargar Panel Rápido (si existe perfil)
       const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null'); 
       if(d) document.getElementById('selectedDiet').textContent = d.name;
       else document.getElementById('selectedDiet').textContent = 'Ninguna';
@@ -1018,9 +1007,8 @@
                   localStorage.setItem('fitlife_profile_pic', dataUrl);
                   loadProfilePic(dataUrl);
               } catch (error) {
-                  // Error común si la imagen es muy grande para localStorage
                   console.error("Error guardando imagen:", error);
-                  alert("Error: La imagen es demasiado grande. Por favor, elige una más pequeña.");
+                  alert("Error: La imagen es demasiado grande (límite de 5MB). Por favor, elige una más pequeña.");
               }
           };
           reader.readAsDataURL(file);
@@ -1037,7 +1025,10 @@
   // ====================
   function calculateIMC(){
     const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
-    if (!p) return; // No calcular si no hay perfil
+    if (!p) {
+        document.getElementById('imcValue').textContent = '—';
+        return;
+    }
     
     const w = parseFloat(p.weight);
     const h = parseFloat(p.height)/100;
@@ -1078,7 +1069,8 @@
   // Gráficos (Charts)
   // ====================
   function makeDoughnut(ctxId, data, labels, colors){
-    const ctx = document.getElementById(ctxId).getContext('2d');
+    const ctx = document.getElementById(ctxId)?.getContext('2d');
+    if (!ctx) return null;
     return new Chart(ctx, {
       type:'doughnut',
       data:{labels:labels,datasets:[{data:data,backgroundColor:colors,borderWidth:2,borderColor:'rgba(0,0,0,0.15)'}]},
@@ -1096,7 +1088,9 @@
 
   function initProgressChart() {
       if (isProgressChartInitialized) return;
-      const ctxP = document.getElementById('progressChart').getContext('2d');
+      const ctxP = document.getElementById('progressChart')?.getContext('2d');
+      if (!ctxP) return;
+      
       const savedProgress = JSON.parse(localStorage.getItem('fitlife_progress') || '[]');
       progressChart = new Chart(ctxP, {
           type:'line',
@@ -1388,9 +1382,19 @@
       }
       showWizard();
   }
+  // Asignar eventos a los botones de perfil
   openRegister.addEventListener('click', openProfileEditor);
-OPEN_REGISTER_BTN_DUMMY_VAR.addEventListener('click', openProfileEditor); // ARREGLO: Botón de "Editar Perfil"
-  document.getElementById('mobile-profile-btn').addEventListener('click', () => { // ARREGLO: Botón de "Mi Perfil" en menú móvil
+  editProfileBtn.addEventListener('click', () => {
+      // Al hacer clic en "Editar Perfil", lleva a la tarjeta de métricas
+      const metricsCard = document.getElementById('calculadora');
+      metricsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      metricsCard.style.transition = 'all 0.3s ease';
+      metricsCard.style.boxShadow = '0 0 25px var(--accent)';
+      setTimeout(() => {
+          metricsCard.style.boxShadow = '0 6px 22px rgba(2,6,23,0.25)';
+      }, 1500);
+  });
+  document.getElementById('mobile-profile-btn').addEventListener('click', () => {
       closeMobileMenu();
       openProfileEditor();
   });
@@ -1408,19 +1412,18 @@ OPEN_REGISTER_BTN_DUMMY_VAR.addEventListener('click', openProfileEditor); // ARR
       mobileMenuOverlay.classList.remove('visible');
   }
 
-  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu); // ARREGLO: Funcionalidad de botón
+  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu);
   document.getElementById('mobile-menu-close').addEventListener('click', closeMobileMenu);
   mobileMenuOverlay.addEventListener('click', (e) => {
       if (e.target === mobileMenuOverlay) {
           closeMobileMenu();
       }
   });
-  document.getElementById('mobile-theme-btn').addEventListener('click', () => { // ARREGLO: Botón de tema en móvil
+  document.getElementById('mobile-theme-btn').addEventListener('click', () => {
       toggleTheme();
   });
-  document.getElementById('mobile-clear-data-btn').addEventListener('click', () => { // ARREGLO: Botón de borrar en móvil
+  document.getElementById('mobile-clear-data-btn').addEventListener('click', () => {
       closeMobileMenu();
-      // No existe un 'clearData' global, así que simulamos el del desktop
       if(confirm('¿Estás seguro de que quieres borrar todos tus datos guardados (perfil, progreso, diario)?')){
           localStorage.clear();
           location.reload();
