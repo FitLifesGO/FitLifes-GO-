@@ -44,20 +44,23 @@
       transition:background .3s, color .3s;
     }
 
+    /* Contenedor principal para manejar pestañas en móvil */
+    .app-section { display: none; }
+    .app-section.active { display: block; }
+    
+    /* Header (Desktop) */
     header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(180deg, rgba(0,0,0,0.06), transparent);backdrop-filter: blur(6px);position:sticky;top:0;z-index:40}
     .brand{display:flex;gap:12px;align-items:center;color:var(--accent)}
     .brand img { height: 30px; width: auto; }
     .brand h1{margin:0;font-size:1.1rem;color:inherit}
 
     .desktop-nav{display:flex;gap:12px;align-items:center}
-    .desktop-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px}
+    .desktop-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px; cursor:pointer;}
     .desktop-nav a:hover{background:var(--glass);color:inherit}
 
     .desktop-controls{display:flex;gap:10px;align-items:center}
     .btn{background:var(--accent);color:#042027;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600; text-decoration:none; display:inline-block; text-align:center;}
     .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-
-    #mobile-menu-btn { display: none; }
 
     main{padding:28px;max-width:1200px;margin:18px auto}
 
@@ -72,14 +75,18 @@
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
     .col-8{grid-column:span 8}
     .col-4{grid-column:span 4}
-    
+    .col-12{grid-column:span 12} /* Usado para simplificar la vista móvil */
+
     /* Cards */
     .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 22px rgba(2,6,23,0.25)}
     h3{margin-top:0;color:var(--muted)}
 
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.06);font-weight:600}
-    .chart-wrap{width:140px;height:140px;display:flex;align-items:center;justify-content:center}
-    .form-row{display:flex;gap:8px;margin-bottom:10px}
+    /* Plan and Diet Cards */
+    .plans, .diet-list{display:flex;gap:12px;flex-wrap:wrap}
+    .plan, .diet-card{flex:1 1 220px;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    
+    /* Formulario y Calculadora */
+    .form-row{display:flex;gap:8px;margin-bottom:10px; flex-wrap: wrap;}
     input,select{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit; width:100%;}
     .form-row input, .form-row select {flex: 1;}
 
@@ -89,92 +96,111 @@
     .msg{max-width:70%;padding:10px;border-radius:10px}
     .msg.user{align-self:flex-end;background:var(--accent);color:#002024}
     .msg.bot{align-self:flex-start;background:rgba(255,255,255,0.03)}
-
-    /* Tutorial Step Styling */
-    .tutorial-step {
-        border-left: 4px solid var(--accent);
-        padding: 10px 15px;
-        margin-bottom: 15px;
-        background: var(--glass);
-        border-radius: 8px;
-    }
-    .tutorial-step strong {
-        color: var(--accent);
-    }
+    .chat-input{display:flex;gap:8px;margin-top:8px}
+    .chat-input input{flex:1}
     
-    footer{padding:28px;text-align:center;color:var(--muted);margin-top: 30px; border-top: 1px solid var(--glass);}
-    footer p {margin: 5px 0;}
-    footer strong {color: var(--accent);}
+    /* Footer & Credits */
+    footer{padding:28px;text-align:center;color:var(--muted);margin-top: 30px;border-top: 1px solid var(--glass);}
+    footer p { margin: 5px 0; }
+    footer strong { color: var(--accent); }
 
     /* ====================
-        NUEVO: Mejoras Responsive
+        Modales (Tutorial, Wizard, Detalles)
        ==================== */
-    @media (max-width:900px){
-      header { padding: 15px; }
-      main { padding: 15px 15px 80px 15px; } /* Espacio para la nav móvil fija */
-      
-      .desktop-nav, .desktop-controls { display: none; }
-      #mobile-menu-btn { display: block; }
-      .hero{grid-template-columns:1fr}
-      .grid{display:block}
-      .col-8,.col-4{grid-column:auto}
-      .hero-buttons { flex-direction: column; }
-      .hero-buttons .btn { width: 100%; }
-      .diet-list { flex-direction: column; }
-      .diet-card { flex-direction: column; text-align: center; }
-      .chart-wrap { margin-bottom: 10px; }
-      .form-row { flex-direction: column; }
-      .card[data-aos] { margin-top: 14px; }
-      
-      /* Ocultar las secciones largas por defecto en móvil, excepto la activa */
-      #diario, #planes, #dietas, #contacto, #creditos, #tutorial { display: none; }
-      .mobile-active-section { display: block !important; }
-
-      /* Barrita de navegación inferior para móvil */
-      #mobile-nav-tabs {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          background: var(--card);
-          border-top: 1px solid var(--glass);
-          display: flex;
-          justify-content: space-around;
-          padding: 8px 0;
-          z-index: 50;
-          box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-      }
-      .tab-btn {
-          background: none;
-          border: none;
-          color: var(--muted);
-          cursor: pointer;
-          font-size: 0.7rem;
-          padding: 5px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 3px;
-          font-weight: 600;
-      }
-      .tab-btn i {
-          font-size: 1.2rem;
-      }
-      .tab-btn.active {
-          color: var(--accent);
-      }
-      
+    .modal-overlay { /* Estilos de Overlay y Modal Content omitidos por brevedad */ }
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; backdrop-filter: blur(5px);
+      opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    /* Estilos de Modales y otros se mantienen... */
-    .wizard-step{display:none;}
-    .wizard-step.active{display:block;}
-    .wizard-nav{display:flex;justify-content:space-between;margin-top:20px;}
-    .wizard-options .option{ display:block; padding:12px 18px; border:1px solid var(--glass); border-radius:10px; margin-bottom:10px; cursor:pointer; }
-    .wizard-options .option:hover{background:var(--glass);}
-    .wizard-options .option.selected{border-color:var(--accent); color:var(--accent);}
-    .modal-overlay { /* ... */ }
-    .modal-overlay.visible { /* ... */ }
-    /* ... (resto de estilos de modales y componentes) */
+    .modal-overlay.visible { opacity: 1; visibility: visible; }
+    .modal-content {
+      background: var(--card); border-radius: var(--radius); width: 90%; max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(-30px) scale(0.95); opacity: 0;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      display: flex; flex-direction: column; max-height: 90vh;
+    }
+    .modal-overlay.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; border-bottom: 1px solid var(--glass); }
+    .modal-header h2 { margin: 0; color: var(--accent); font-size: 1.4rem; }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 2.2rem; cursor: pointer; line-height: 1; padding: 0; }
+    .modal-body { padding: 20px 28px; overflow-y: auto; }
+    .modal-body ul { padding-left: 20px; margin-top: 0; }
+    .modal-body strong { color: var(--accent-2); }
+    .modal-footer { padding: 18px 28px; border-top: 1px solid var(--glass); display: flex; justify-content: flex-end; }
+    .wizard-options .option { display:block; padding:12px 18px; border:1px solid var(--glass); border-radius:10px; margin-bottom:10px; cursor:pointer; }
+    .wizard-options .option.selected { border-color:var(--accent); color:var(--accent); }
+
+
+    /* ====================
+        NUEVO: Lógica Responsive (Mobile First)
+       ==================== */
+    .desktop-nav, .desktop-controls, #mobile-menu-btn { display: none; } /* Ocultar en móvil, manejado por bottom-nav */
+    header { padding: 15px; }
+
+    /* Barra de Navegación Inferior (MOBILE) */
+    #bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; justify-content: space-around;
+      background: var(--card); border-top: 1px solid var(--glass);
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+      z-index: 50; padding: 0;
+    }
+    .nav-item {
+      flex: 1; text-align: center; padding: 10px 0;
+      text-decoration: none; color: var(--muted);
+      font-size: 0.7rem; display: flex; flex-direction: column;
+      align-items: center; cursor: pointer;
+    }
+    .nav-item i { font-size: 1.3rem; margin-bottom: 3px; }
+    .nav-item.active { color: var(--accent); }
+
+    main {
+        padding: 15px;
+        /* Espacio para la barra inferior en móvil */
+        padding-bottom: 70px;
+    }
+
+    /* Adaptar Tarjetas y Grid en Móvil */
+    .hero { grid-template-columns: 1fr; }
+    .hero .card { padding: 18px; }
+    .hero-buttons { flex-direction: column; }
+    .grid { display: block; } /* Apilar columnas */
+    .col-8, .col-4 { grid-column: auto; }
+    .diet-list, .plans { flex-direction: column; }
+    .diet-card { flex-direction: row; text-align: left; }
+    .diet-card .chart-wrap { margin: 0 10px 0 0; }
+    .diet-card .diet-info { flex: 1; }
+    .card { margin-bottom: 15px; }
+    
+    /* El chat debe adaptarse a la altura del móvil */
+    .app-section#asistente { height: 100vh; display: flex; flex-direction: column; }
+    .app-section#asistente .card { flex: 1; display: flex; flex-direction: column; margin-bottom: 0; }
+    .app-section#asistente .chat { flex: 1; height: auto; }
+    .app-section#asistente .chat .messages { height: auto; }
+
+
+    /* Media Query para Desktop (Revertir cambios) */
+    @media (min-width: 900px) {
+      /* Ocultar móvil */
+      #bottom-nav { display: none !important; }
+      main { padding-bottom: 28px; }
+      .app-section { display: block !important; }
+      .app-section:not(#inicio) { display: none !important; }
+      
+      /* Mostrar Desktop */
+      .desktop-nav, .desktop-controls { display: flex; }
+      .hero{grid-template-columns:1fr 420px}
+      .grid{display:grid}
+      .col-8{grid-column:span 8}
+      .col-4{grid-column:span 4}
+      .app-section#asistente { height: auto; display: block; }
+      .app-section#asistente .card { display: block; height: auto; }
+      .app-section#asistente .chat { height: 320px; }
+    }
   </style>
 </head>
 <body data-theme="dark">
@@ -185,239 +211,252 @@
     </div>
     
     <nav class="desktop-nav">
-      <a href="#inicio">Inicio</a>
-      <a href="#tutorial">Guía Rápida</a>
-      <a href="#planes">Planes</a>
-      <a href="#dietas">Dietas</a>
-      <a href="#diario">Diario</a>
-      <a href="#contacto">Contacto</a>
-      <a href="#creditos">Créditos</a>
+      <a data-target="inicio" class="nav-desktop active">Inicio</a>
+      <a data-target="diario-tracker" class="nav-desktop">Diario</a>
+      <a data-target="planes" class="nav-desktop">Planes</a>
+      <a data-target="dietas" class="nav-desktop">Dietas</a>
+      <a data-target="asistente" class="nav-desktop">Asistente</a>
+      <a data-target="contacto-creditos" class="nav-desktop">Contacto</a>
     </nav>
     <div class="desktop-controls">
       <button id="themeToggle" class="btn secondary" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
       <button id="openRegister" class="btn">Mi Perfil</button>
     </div>
-
-    <button id="mobile-menu-btn" class="btn secondary"><i class="fa-solid fa-bars"></i></button>
-
   </header>
 
   <main>
-    <section class="hero" id="inicio">
-      <div class="card">
-        <h2>Entrena con propósito, come con intención</h2>
-        <p>Planes personalizados, calculadoras, seguimiento y un sistema visual de dietas con gráficos para entender tus macros de forma rápida.</p>
-        <div class="hero-buttons">
-          <button class="btn" onclick="showSection('planes')">Ver Planes</button>
-          <button class="btn secondary" onclick="showSection('diario')">Mi Diario</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Panel rápido</h3>
-        <p class="badge">IMC: <span id="imcValue">—</span></p>
-        <p style="margin-top:8px">Objetivo: <strong id="selectedGoal">...</strong></p>
-        <p style="margin-top:8px">Dieta seleccionada: <strong id="selectedDiet">...</strong></p>
-        <p style="margin-top:8px">Plan seleccionado: <strong id="selectedPlan">...</strong></p>
-        <div style="margin-top:12px">
-          <button class="btn" id="saveProfile">Guardar Métricas</button>
-          <button class="btn secondary" id="clearData">Borrar Todo</button>
-        </div>
-      </div>
-    </section>
-
-    <div class="col-12">
-        <div id="tracker" class="card" data-aos="fade-up">
-            <h3>Seguimiento de Hoy</h3>
-            <div class="tracker-item">
-                <input type="checkbox" id="track-water">
-                <label for="track-water">Bebí 2L de agua</label>
-            </div>
-            <div class="tracker-item">
-                <input type="checkbox" id="track-workout">
-                <label for="track-workout">Entrené hoy</label>
-            </div>
-            <div class="tracker-item">
-                <input type="checkbox" id="track-diet">
-                <label for="track-diet">Seguí mi dieta</label>
-            </div>
-            <hr style="border-color:var(--glass); margin: 12px 0;">
-            <div class="form-row">
-                <input type="number" id="track-calories" placeholder="Calorías consumidas (ej: 1800)">
-            </div>
-            <button class="btn" style="width:100%" onclick="completeDay()">Completar Día</button>
-        </div>
-
-        <div class="card" data-aos="fade-up">
-          <h3>Asistente FitLifes¡GO!</h3>
-          <div class="chat">
-            <div class="messages" id="messages"></div>
-            <div class="chat-input">
-              <input id="chatInput" placeholder="Pregúntame algo..." />
-              <button class="btn" onclick="sendMessage()">Enviar</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="calculadora" class="card" data-aos="fade-up">
-          <h3>Mis Métricas</h3>
-          <p>Estos datos se usan para todas las calculadoras. Ajústalos aquí o en el cuestionario.</p>
-          <div>
-            <div class="form-row">
-              <input id="age" type="number" placeholder="Edad" />
-              <select id="sex" onchange="toggleCustomGender('sex')">
-                <option value="male">Hombre</option>
-                <option value="female">Mujer</option>
-                <option value="other">Otro</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <input id="height" type="number" placeholder="Altura (cm)" />
-              <input id="weight" type="number" placeholder="Peso (kg)" />
-            </div>
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn" onclick="calculateCalories()">Calcular TMB</button>
-              <button class="btn secondary" onclick="saveProfile()">Guardar</button>
-            </div>
-            <p style="margin-top:12px">Tu TMB estimada: <strong id="tmb">—</strong></p>
-            <p>Calorías objetivo: <strong id="targetCalories">—</strong></p>
-          </div>
-        </div>
-    </div>
-
-
-    <div class="grid">
-      <div class="col-12">
+    <div id="app-container">
         
-        <div id="tutorial" class="card" data-aos="fade-up">
-            <h3>Guía Rápida: ¡Empezar en 3 pasos!</h3>
-            <div class="tutorial-step">
-                <h4>1. Configura tu Perfil</h4>
-                <p>Presiona <strong>"Mi Perfil"</strong> para abrir el cuestionario. Introduce tu nombre, edad, peso y, lo más importante, tu <strong>objetivo</strong> (Perder, Mantener o Ganar). Esto calcula tus calorías objetivo automáticamente.</p>
-            </div>
-            <div class="tutorial-step">
-                <h4>2. Elige tu Plan y Dieta</h4>
-                <p>Ve a las secciones <strong>"Planes"</strong> y <strong>"Dietas"</strong> para seleccionar el que más te convenga. Al seleccionarlos, se guardarán y aparecerán en tu "Panel Rápido".</p>
-            </div>
-            <div class="tutorial-step">
-                <h4>3. Rellena tu Diario</h4>
-                <p>Usa el panel <strong>"Seguimiento de Hoy"</strong> (más arriba) para marcar tus actividades y calorías al final del día. Presiona <strong>"Completar Día"</strong> y verás tu entrada en el <strong>"Diario de Progreso"</strong>.</p>
-            </div>
-        </div>
-
-        <div id="diario" class="card" data-aos="fade-up">
-            <h3>Diario de Progreso</h3>
-            <p>Aquí se guarda un resumen de tus actividades diarias y tu progreso de peso.</p>
-            <div class="grid" style="align-items: start;">
-                <div class="col-8">
-                    <h4>Historial de Actividad</h4>
-                    <div id="journal-log" class="journal-log">
-                        <p>Aún no hay entradas. Completa tu día en el panel "Seguimiento de Hoy" para empezar.</p>
+        <section id="inicio" class="app-section active">
+            <div class="hero">
+                <div class="card" data-aos="fade-right">
+                    <h2>Entrena con propósito, come con intención</h2>
+                    <p>Planes personalizados, calculadoras, seguimiento y un sistema visual de dietas con gráficos para entender tus macros de forma rápida.</p>
+                    <div class="hero-buttons">
+                        <button class="btn" onclick="switchSection('planes')">Ver Planes</button>
+                        <button class="btn secondary" onclick="switchSection('diario-tracker')">Mi Diario</button>
                     </div>
                 </div>
-                <div class="col-4">
-                    <h4>Progreso de Peso</h4>
-                    <canvas id="progressChart" height="140"></canvas>
-                    <div style="margin-top:8px;display:flex;gap:8px">
-                        <input id="pesoInput" type="number" placeholder="Peso (kg)" />
-                        <button class="btn" onclick="addProgress()">Añadir</button>
+
+                <div class="card" data-aos="fade-left">
+                    <h3>Panel rápido</h3>
+                    <p class="badge">IMC: <span id="imcValue">—</span></p>
+                    <p style="margin-top:8px">Objetivo: <strong id="selectedGoal">...</strong></p>
+                    <p style="margin-top:8px">Dieta seleccionada: <strong id="selectedDiet">...</strong></p>
+                    <p style="margin-top:8px">Plan seleccionado: <strong id="selectedPlan">...</strong></p>
+                    <div style="margin-top:12px">
+                        <button class="btn" id="saveProfile">Guardar Métricas</button>
+                        <button class="btn secondary" id="clearData">Borrar Todo</button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div id="planes" class="card" data-aos="fade-up">
-          <h3>Planes de Entrenamiento (Todos Gratis)</h3>
-          <div class="plans">
-            <div class="plan">
-              <h4>Pérdida de peso</h4>
-              <p>Entrenamientos HIIT, 4x por semana...</p>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                <div class="price">Gratis</div>
-                <button class="btn secondary" onclick="showPlanDetails('weight_loss')">Ver más</button>
-              </div>
-            </div>
-            <div class="plan">
-              <h4>Aumento muscular</h4>
-              <p>Fuerza y volumen, 5x por semana...</p>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                <div class="price">Gratis</div>
-                <button class="btn secondary" onclick="showPlanDetails('muscle_gain')">Ver más</button>
-              </div>
-            </div>
-            <div class="plan">
-              <h4>Tonificación</h4>
-              <p>Combinación cardio-fuerza, 3x...</p>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                <div class="price">Gratis</div>
-                <button class="btn secondary" onclick="showPlanDetails('toning')">Ver más</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="dietas" class="card" data-aos="fade-up">
-          <h3>Planes de Dieta</h3>
-          <div class="diet-list">
-            <div class="diet-card card" data-diet="balanced">
-              <div class="chart-wrap"><canvas id="chart-balanced" width="140" height="140"></canvas></div>
-              <div class="diet-info">
-                <h4>Balanceada</h4> <p>Macros: <span class="badge">P 30% • C 45% • G 25%</span></p>
-                <div style="margin-top:8px">
-                  <button class="btn" onclick="selectDiet('Balanceada', 'balanced')">Seleccionar</button>
-                  <button class="btn secondary" onclick="showDietDetails('balanced')">Detalles</button>
+            
+            <div class="grid">
+                 <div class="col-12" id="calculadora-inicio" data-aos="fade-up">
+                    <div id="calculadora" class="card">
+                        <h3>Mis Métricas</h3>
+                        <p>Estos datos se usan para todas las calculadoras. Ajústalos aquí o en el cuestionario.</p>
+                        <div>
+                            <div class="form-row">
+                                <input id="age" type="number" placeholder="Edad" />
+                                <select id="sex" onchange="checkCustomGender('sex')">
+                                    <option value="male">Hombre</option><option value="female">Mujer</option><option value="other">Otro</option>
+                                </select>
+                                <input id="custom-gender-input-metrics" type="text" placeholder="¿Cómo te identificas? (Opcional)" style="display:none;" />
+                            </div>
+                            <div class="form-row">
+                                <input id="height" type="number" placeholder="Altura (cm)" />
+                                <input id="weight" type="number" placeholder="Peso (kg)" />
+                            </div>
+                            <div style="display:flex;gap:8px;margin-top:8px">
+                                <button class="btn" onclick="calculateCalories()">Calcular TMB</button>
+                                <button class="btn secondary" onclick="saveProfile()">Guardar</button>
+                            </div>
+                            <p style="margin-top:12px">Tu TMB estimada: <strong id="tmb">—</strong></p>
+                            <p>Calorías objetivo: <strong id="targetCalories">—</strong></p>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="diet-card card" data-diet="keto">
-              <div class="chart-wrap"><canvas id="chart-keto" width="140" height="140"></canvas></div>
-              <div class="diet-info">
-                <h4>Cetogénica</h4> <p>Macros: <span class="badge">P 20% • C 10% • G 70%</span></p>
-                <div style="margin-top:8px">
-                  <button class="btn" onclick="selectDiet('Cetogénica', 'keto')">Seleccionar</button>
-                  <button class="btn secondary" onclick="showDietDetails('keto')">Detalles</button>
-                </div>
-              </div>
-            </div>
-            <div class="diet-card card" data-diet="vegan">
-              <div class="chart-wrap"><canvas id="chart-vegan" width="140" height="140"></canvas></div>
-              <div class="diet-info">
-                <h4>Vegana</h4> <p>Macros: <span class="badge">P 25% • C 55% • G 20%</span></p>
-                <div style="margin-top:8px">
-                  <button class="btn" onclick="selectDiet('Vegana', 'vegan')">Seleccionar</button>
-                  <button class="btn secondary" onclick="showDietDetails('vegan')">Detalles</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
 
-        <div id="contacto" class="card" data-aos="fade-up">
-          <h3>Contacto</h3>
-          <form onsubmit="event.preventDefault();alert('Mensaje enviado (simulado)')">
-            <div class="form-row">
-              <input required placeholder="Nombre" />
-              <input required placeholder="Correo" type="email" />
+        <section id="diario-tracker" class="app-section">
+            <div class="grid">
+                <div class="col-12" data-aos="fade-left">
+                    <div id="tracker" class="card">
+                        <h3>Seguimiento de Hoy</h3>
+                        <div class="tracker-item">
+                            <input type="checkbox" id="track-water">
+                            <label for="track-water">Bebí 2L de agua</label>
+                        </div>
+                        <div class="tracker-item">
+                            <input type="checkbox" id="track-workout">
+                            <label for="track-workout">Entrené hoy</label>
+                        </div>
+                        <div class="tracker-item">
+                            <input type="checkbox" id="track-diet">
+                            <label for="track-diet">Seguí mi dieta</label>
+                        </div>
+                        <hr style="border-color:var(--glass); margin: 12px 0;">
+                        <div class="form-row">
+                            <input type="number" id="track-calories" placeholder="Calorías consumidas (ej: 1800)">
+                            <input id="pesoInput" type="number" placeholder="Peso de hoy (kg)" />
+                        </div>
+                        <button class="btn" style="width:100%" onclick="completeDay()">Completar Día y Guardar Peso</button>
+                    </div>
+                </div>
+                
+                <div class="col-12" data-aos="fade-up">
+                    <div id="diario" class="card">
+                        <h3>Mi Progreso y Historial</h3>
+                        <h4>Gráfico de Peso</h4>
+                        <canvas id="progressChart" height="100"></canvas>
+                        
+                        <h4 style="margin-top:15px;">Historial de Actividad</h4>
+                        <div id="journal-log" class="journal-log">
+                            <p>Aún no hay entradas.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <textarea required placeholder="Mensaje" style="width:100%;min-height:100px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit"></textarea>
-            <div style="margin-top:10px"><button class="btn">Enviar</button></div>
-          </form>
-        </div>
+        </section>
 
-        <div id="creditos" class="card" data-aos="fade-up">
-            <h3>Créditos</h3>
-            <p><strong>Escuela:</strong> CBTis N. 132, Hermosillo Sonora México</p>
-            <p><strong>Desarrolladores:</strong></p>
-            <ul>
-                <li>Jonathan Alexis Payan Enriquez</li>
-                <li>Sebastian Teran Rubio</li>
-            </ul>
-            <p><strong>Desarrollador Principal:</strong> Jesus Abraham Lopez Gutierrez</p>
-        </div>
+        <section id="planes" class="app-section">
+            <div class="grid">
+                <div class="col-12" data-aos="fade-up">
+                    <div class="card">
+                        <h3>Planes de Entrenamiento (Todos Gratis)</h3>
+                        <p>Selecciona el plan que se adapte a tu objetivo y visualiza los detalles.</p>
+                        <div class="plans">
+                            <div class="plan">
+                                <h4>Pérdida de peso</h4>
+                                <p>Entrenamientos HIIT, 4x por semana...</p>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                                    <div class="price">Gratis</div>
+                                    <button class="btn secondary" onclick="showPlanDetails('weight_loss')">Ver más</button>
+                                </div>
+                            </div>
+                            <div class="plan">
+                                <h4>Aumento muscular</h4>
+                                <p>Fuerza y volumen, 5x por semana...</p>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                                    <div class="price">Gratis</div>
+                                    <button class="btn secondary" onclick="showPlanDetails('muscle_gain')">Ver más</button>
+                                </div>
+                            </div>
+                            <div class="plan">
+                                <h4>Tonificación</h4>
+                                <p>Combinación cardio-fuerza, 3x...</p>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                                    <div class="price">Gratis</div>
+                                    <button class="btn secondary" onclick="showPlanDetails('toning')">Ver más</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dietas" class="app-section">
+            <div class="grid">
+                <div class="col-12" data-aos="fade-up">
+                    <div class="card">
+                        <h3>Planes de Dieta</h3>
+                        <p>Revisa los perfiles de macronutrientes para elegir la dieta que mejor se alinee con tus objetivos.</p>
+                        <div class="diet-list">
+                            <div class="diet-card card" data-diet="balanced">
+                                <div class="chart-wrap"><canvas id="chart-balanced" width="140" height="140"></canvas></div>
+                                <div class="diet-info">
+                                    <h4>Balanceada</h4> <p>Macros: <span class="badge">P 30% • C 45% • G 25%</span></p>
+                                    <div style="margin-top:8px">
+                                        <button class="btn" onclick="selectDiet('Balanceada', 'balanced')">Seleccionar</button>
+                                        <button class="btn secondary" onclick="showDietDetails('balanced')">Detalles</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="diet-card card" data-diet="keto">
+                                <div class="chart-wrap"><canvas id="chart-keto" width="140" height="140"></canvas></div>
+                                <div class="diet-info">
+                                    <h4>Cetogénica</h4> <p>Macros: <span class="badge">P 20% • C 10% • G 70%</span></p>
+                                    <div style="margin-top:8px">
+                                        <button class="btn" onclick="selectDiet('Cetogénica', 'keto')">Seleccionar</button>
+                                        <button class="btn secondary" onclick="showDietDetails('keto')">Detalles</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="diet-card card" data-diet="vegan">
+                                <div class="chart-wrap"><canvas id="chart-vegan" width="140" height="140"></canvas></div>
+                                <div class="diet-info">
+                                    <h4>Vegana</h4> <p>Macros: <span class="badge">P 25% • C 55% • G 20%</span></p>
+                                    <div style="margin-top:8px">
+                                        <button class="btn" onclick="selectDiet('Vegana', 'vegan')">Seleccionar</button>
+                                        <button class="btn secondary" onclick="showDietDetails('vegan')">Detalles</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="asistente" class="app-section">
+             <div class="grid">
+                <div class="col-12" data-aos="fade-up">
+                     <div class="card">
+                        <h3>Asistente FitLifes¡GO!</h3>
+                        <div class="chat">
+                          <div class="messages" id="messages"></div>
+                          <div class="chat-input">
+                            <input id="chatInput" placeholder="Pregúntame algo..." />
+                            <button class="btn" onclick="sendMessage()">Enviar</button>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         
-      </div>
-    </div>
-  </main>
+        <section id="contacto-creditos" class="app-section">
+            <div class="grid">
+                <div class="col-12">
+                    <section id="contacto" class="card" data-aos="fade-up">
+                        <h3>Contacto</h3>
+                        <form onsubmit="event.preventDefault();alert('Mensaje enviado (simulado)')">
+                            <div class="form-row">
+                                <input required placeholder="Nombre" />
+                                <input required placeholder="Correo" type="email" />
+                            </div>
+                            <textarea required placeholder="Mensaje" style="width:100%;min-height:100px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit"></textarea>
+                            <div style="margin-top:10px"><button class="btn">Enviar</button></div>
+                        </form>
+                    </section>
+                </div>
+                <div class="col-12">
+                     <section id="creditos" class="card" data-aos="fade-up">
+                        <h3>Créditos</h3>
+                        <p><strong>Escuela:</strong> CBTis N. 132, Hermosillo Sonora México</p>
+                        <p><strong>Desarrolladores:</strong></p>
+                        <ul>
+                            <li>Jonathan Alexis Payan Enriquez</li>
+                            <li>Sebastian Teran Rubio</li>
+                        </ul>
+                        <p><strong>Desarrollador Principal:</strong> Jesus Abraham Lopez Gutierrez</p>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+    </div> </main>
+
+  <nav id="bottom-nav">
+      <div class="nav-item active" data-target="inicio"><i class="fa-solid fa-house"></i>Inicio</div>
+      <div class="nav-item" data-target="diario-tracker"><i class="fa-solid fa-chart-line"></i>Diario</div>
+      <div class="nav-item" data-target="planes"><i class="fa-solid fa-dumbbell"></i>Planes</div>
+      <div class="nav-item" data-target="dietas"><i class="fa-solid fa-apple-whole"></i>Dietas</div>
+      <div class="nav-item" data-target="asistente"><i class="fa-solid fa-robot"></i>Asistente</div>
+  </nav>
 
   <footer>
     <p>© 2025 FitLifes¡GO! • CBTis Fit App • Política de Privacidad</p>
@@ -425,50 +464,39 @@
 
   <div id="wizard-modal" class="modal-overlay">
     <div class="modal-content">
-      <div id="step-1" class="wizard-step active">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¡Bienvenido a FitLifes¡GO!</h2>
+      <div id="step-1" class="wizard-step active modal-body">
+          <h2>¡Bienvenido a FitLifes¡GO!</h2>
           <p>Vamos a configurar tu perfil. Esto solo tomará un minuto y nos ayudará a personalizar tu experiencia.</p>
-          <div class="wizard-nav">
-              <span></span>
-              <button class="btn" onclick="nextStep(2)">Comenzar</button>
-          </div>
+          <div class="wizard-nav"><span></span><button class="btn" onclick="nextStep(2)">Comenzar</button></div>
       </div>
-      <div id="step-2" class="wizard-step">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¿Cuál es tu objetivo principal?</h2>
+      <div id="step-2" class="wizard-step modal-body">
+          <h2>¿Cuál es tu objetivo principal?</h2>
           <div class="wizard-options">
               <div class="option" id="goal-lose" onclick="selectWizardOption('goal', 'lose')">Perder Peso</div>
               <div class="option" id="goal-maintain" onclick="selectWizardOption('goal', 'maintain')">Mantener Peso</div>
               <div class="option" id="goal-gain" onclick="selectWizardOption('goal', 'gain')">Ganar Músculo</div>
           </div>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="prevStep(1)">Atrás</button>
-              <button class="btn" onclick="nextStep(3)">Siguiente</button>
-          </div>
+          <div class="wizard-nav"><button class="btn secondary" onclick="prevStep(1)">Atrás</button><button class="btn" onclick="nextStep(3)">Siguiente</button></div>
       </div>
-      <div id="step-3" class="wizard-step">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Cuéntanos sobre ti</h2>
+      <div id="step-3" class="wizard-step modal-body">
+          <h2>Cuéntanos sobre ti</h2>
           <p>Usaremos esto para calcular tus calorías, IMC y TMB.</p>
           <div class="form-row">
               <input id="wiz-name" type="text" placeholder="Tu Nombre" />
-              <select id="wiz-sex" onchange="toggleCustomGender('wiz-sex')">
-                <option value="male">Hombre</option>
-                <option value="female">Mujer</option>
-                <option value="other">Otro</option>
+              <select id="wiz-sex" onchange="checkCustomGender('wiz-sex')">
+                  <option value="male">Hombre</option><option value="female">Mujer</option><option value="other">Otro</option>
               </select>
+              <input id="custom-gender-input-wiz" type="text" placeholder="¿Cómo te identificas? (Opcional)" style="display:none;" />
           </div>
-          <input id="wiz-custom-gender" type="text" placeholder="¿Cómo te identificas? (Opcional)" style="display:none; margin-bottom:10px;" />
           <div class="form-row">
               <input id="wiz-age" type="number" placeholder="Edad" />
               <input id="wiz-height" type="number" placeholder="Altura (cm)" />
               <input id="wiz-weight" type="number" placeholder="Peso (kg)" />
           </div>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="prevStep(2)">Atrás</button>
-              <button class="btn" onclick="nextStep(4)">Siguiente</button>
-          </div>
+          <div class="wizard-nav"><button class="btn secondary" onclick="prevStep(2)">Atrás</button><button class="btn" onclick="nextStep(4)">Siguiente</button></div>
       </div>
-      <div id="step-4" class="wizard-step">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Tu Estilo de Vida</h2>
+      <div id="step-4" class="wizard-step modal-body">
+          <h2>Tu Estilo de Vida</h2>
           <p>Nivel de Actividad Física:</p>
           <select id="wiz-activity" style="width:100%; margin-bottom: 12px;">
               <option value="1.2">Sedentario (poco o nada)</option>
@@ -479,31 +507,38 @@
           </select>
           <p>Preferencia de Dieta (Opcional):</p>
           <select id="wiz-diet" style="width:100%">
-              <option value="">Ninguna en especial</option>
-              <option value="balanced">Balanceada</option>
-              <option value="keto">Cetogénica</option>
-              <option value="vegan">Vegana</option>
+              <option value="">Ninguna en especial</option><option value="balanced">Balanceada</option>
+              <option value="keto">Cetogénica</option><option value="vegan">Vegana</option>
           </select>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="prevStep(3)">Atrás</button>
-              <button class="btn" onclick="completeWizard()">Finalizar</button>
-          </div>
+          <div class="wizard-nav"><button class="btn secondary" onclick="prevStep(3)">Atrás</button><button class="btn" onclick="completeWizard()">Finalizar</button></div>
       </div>
     </div>
   </div>
 
   <div id="details-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header"><h2 id="modal-title-dynamic"></h2><button id="closeModal" class="modal-close">&times;</button></div>
+      <div id="modal-body-dynamic" class="modal-body"></div>
+      <div id="modal-footer-dynamic" class="modal-footer"></div>
     </div>
+  </div>
 
-  <div id="mobile-menu-overlay" class="modal-overlay">
+  <div id="tutorial-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header"><h2 style="color:var(--accent-2)">👋 ¡Empecemos con FitLifes¡GO!</h2><button class="modal-close" onclick="closeTutorial()">&times;</button></div>
+      <div class="modal-body">
+          <p>La aplicación está diseñada para ser fácil de usar, como una app móvil:</p>
+          <ul>
+              <li><strong>Pestañas Inferiores (Móvil):</strong> Cambia de sección instantáneamente con los botones de abajo.</li>
+              <li><strong>Inicio:</strong> Ve tu resumen y ajusta tus métricas de peso, altura, etc.</li>
+              <li><strong>Diario:</strong> Guarda tu peso diario y marca tus tareas de agua/ejercicio. ¡Todo se guarda automáticamente en el navegador!</li>
+              <li><strong>Planes/Dietas:</strong> Explora y selecciona tu rutina y estilo de comida.</li>
+              <li><strong>Asistente:</strong> Pregúntale cualquier duda de fitness, nutrición o salud.</li>
+          </ul>
+          <p>¡Tu nombre y todo tu progreso se guardará incluso si cierras y abres el navegador! **¡A darle!**</p>
+      </div>
+      <div class="modal-footer"><button class="btn" onclick="closeTutorial()">¡Entendido!</button></div>
     </div>
-  
-  <div id="mobile-nav-tabs">
-      <button class="tab-btn active" data-section="tutorial"><i class="fa-solid fa-graduation-cap"></i> Guía</button>
-      <button class="tab-btn" data-section="planes"><i class="fa-solid fa-weight-hanging"></i> Planes</button>
-      <button class="tab-btn" data-section="dietas"><i class="fa-solid fa-apple-whole"></i> Dietas</button>
-      <button class="tab-btn" data-section="diario"><i class="fa-solid fa-book"></i> Diario</button>
-      <button class="tab-btn" data-section="creditos"><i class="fa-solid fa-medal"></i> Créditos</button>
   </div>
 
 
@@ -529,6 +564,79 @@
   
   // ==================== AOS init ====================
   AOS.init({once:true, duration:700});
+
+  // ====================
+  // Lógica de Tabs y Navegación (Desktop y Móvil)
+  // ====================
+  function switchSection(targetId) {
+      // 1. Ocultar todas las secciones y desactivar todos los enlaces/items
+      document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.nav-desktop').forEach(n => n.classList.remove('active'));
+
+      // 2. Mostrar la sección objetivo
+      const targetSection = document.getElementById(targetId);
+      if (targetSection) {
+          targetSection.classList.add('active');
+          // Para desktop, asegurarse de que solo se muestre el target o si es inicio
+          if (window.innerWidth >= 900) {
+              document.querySelectorAll('.app-section:not(#inicio)').forEach(s => s.style.display = 'none');
+              targetSection.style.display = 'block';
+              if (targetId !== 'inicio') {
+                 // Si no es inicio, ocultar el hero y solo mostrar el target
+                 document.querySelector('.hero').style.display = 'none';
+                 // Ocultar la calculadora de inicio si no es la vista principal
+                 document.getElementById('calculadora-inicio').style.display = 'none';
+              } else {
+                 document.querySelector('.hero').style.display = 'grid';
+                 document.getElementById('calculadora-inicio').style.display = 'block';
+              }
+          }
+      }
+      
+      // 3. Activar el ítem de navegación correspondiente
+      document.querySelectorAll(`[data-target="${targetId}"]`).forEach(n => n.classList.add('active'));
+      
+      // Scroll to top on mobile tab switch
+      if (window.innerWidth < 900) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+  }
+
+  // Asignar listeners a la barra inferior (Móvil)
+  document.querySelectorAll('#bottom-nav .nav-item').forEach(item => {
+      item.addEventListener('click', () => switchSection(item.getAttribute('data-target')));
+  });
+  
+  // Asignar listeners a la barra superior (Desktop)
+  document.querySelectorAll('.desktop-nav .nav-desktop').forEach(link => {
+      link.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchSection(link.getAttribute('data-target'));
+      });
+  });
+  
+  // ====================
+  // Lógica de Género Personalizado
+  // ====================
+  function checkCustomGender(selectId) {
+      const select = document.getElementById(selectId);
+      let inputId = '';
+      if (selectId === 'sex') {
+          inputId = 'custom-gender-input-metrics';
+      } else if (selectId === 'wiz-sex') {
+          inputId = 'custom-gender-input-wiz';
+      }
+      const customInput = document.getElementById(inputId);
+      
+      if (select.value === 'other') {
+          customInput.style.display = 'block';
+          customInput.required = true;
+      } else {
+          customInput.style.display = 'none';
+          customInput.required = false;
+      }
+  }
 
   // ====================
   // Lógica del Cuestionario (Wizard)
@@ -558,36 +666,21 @@
       }
   }
 
-  /**
-   * NUEVO: Muestra/Oculta el campo de género personalizado
-   * @param {string} selectId - ID del elemento select (p. ej., 'wiz-sex' o 'sex')
-   */
-  function toggleCustomGender(selectId) {
-      const select = document.getElementById(selectId);
-      const customInput = document.getElementById('wiz-custom-gender');
-      
-      if (selectId === 'wiz-sex') {
-          if (select.value === 'other') {
-              customInput.style.display = 'block';
-          } else {
-              customInput.style.display = 'none';
-              customInput.value = ''; // Limpiar si se deselecciona
-          }
-      }
-  }
-
   function completeWizard() {
       const name = document.getElementById('wiz-name').value;
       const age = document.getElementById('wiz-age').value;
       const height = document.getElementById('wiz-height').value;
       const weight = document.getElementById('wiz-weight').value;
       const sex = document.getElementById('wiz-sex').value;
-      const customGender = document.getElementById('wiz-custom-gender').value;
+      const customGender = document.getElementById('custom-gender-input-wiz').value;
       const activity = document.getElementById('wiz-activity').value;
       const dietId = document.getElementById('wiz-diet').value;
 
       if (!name || !age || !height || !weight) {
           return alert('Por favor, completa tu nombre, edad, altura y peso.');
+      }
+      if (sex === 'other' && !customGender) {
+          return alert('Por favor, especifica el género con el que te identificas o elige otra opción.');
       }
 
       localStorage.setItem('fitlife_user', JSON.stringify({ name }));
@@ -596,16 +689,28 @@
       
       if(dietId) {
           const dietName = DATABASE.diets[dietId]?.title || 'Balanceada';
-          selectDiet(dietName, dietId, true); // true para silenciar el alert
+          selectDiet(dietName, dietId, true); 
       }
 
       closeWizard();
       alert(`¡Bienvenido, ${name}! Tu perfil de FitLifes¡GO! está configurado.`);
+      localStorage.setItem('fitlife_first_load', 'false'); // Marcar como cargado
       loadProfile();
       welcomeAssistant();
-      showSection('tutorial'); // Mostrar el tutorial al terminar el wizard
+      showTutorial(); // Mostrar tutorial al terminar el wizard
   }
 
+  // ====================
+  // Lógica de Tutorial
+  // ====================
+  const tutorialModal = document.getElementById('tutorial-modal');
+
+  function showTutorial() {
+      tutorialModal.classList.add('visible');
+  }
+  function closeTutorial() {
+      tutorialModal.classList.remove('visible');
+  }
 
   // ====================
   // Lógica de Perfil y Carga
@@ -615,7 +720,7 @@
     const height = document.getElementById('height').value;
     const weight = document.getElementById('weight').value;
     const sex = document.getElementById('sex').value;
-    // En el perfil rápido no hay campo para customGender, solo se usa el select.
+    const customGender = document.getElementById('custom-gender-input-metrics').value;
     if(!age || !height || !weight){ return alert('Por favor, completa edad, altura y peso para guardar.'); }
     
     const p = JSON.parse(localStorage.getItem('fitlife_profile') || '{}');
@@ -623,6 +728,7 @@
     p.height = height;
     p.weight = weight;
     p.sex = sex;
+    p.customGender = customGender;
     
     localStorage.setItem('fitlife_profile', JSON.stringify(p));
     alert('Métricas guardadas');
@@ -642,11 +748,14 @@
           document.getElementById('age').value = p.age; 
           document.getElementById('height').value = p.height; 
           document.getElementById('weight').value = p.weight; 
-          document.getElementById('sex').value = p.sex;
+          document.getElementById('sex').value = p.sex; 
           
-          // Cargar datos en el perfil rápido y calculadora.
           document.getElementById('selectedGoal').textContent = p.goal ? (p.goal.charAt(0).toUpperCase() + p.goal.slice(1)) : 'No definido';
           
+          // Lógica de carga de género personalizado
+          document.getElementById('custom-gender-input-metrics').value = p.customGender || '';
+          checkCustomGender('sex'); // Asegura que el campo opcional se muestre/oculte correctamente.
+
           calculateIMC(); 
           calculateCalories(p.activity, p.goal);
       }
@@ -661,7 +770,7 @@
   }
 
   // ====================
-  // Lógica de Cálculos (IMC, TMB, Calorías)
+  // Lógica de Cálculos (IMC, TMB)
   // ====================
   function calculateIMC(){
     const w = parseFloat(document.getElementById('weight').value);
@@ -684,14 +793,17 @@
     const activity = activity_val || (p ? p.activity : 1.375);
     const goal = goal_val || (p ? p.goal : 'maintain');
     
-    if(!age||!height||!weight){
+    if(!age||!height||!weight|| sex === 'other'){
         document.getElementById('tmb').textContent = '—';
         document.getElementById('targetCalories').textContent = '—';
+        if (sex === 'other') document.getElementById('tmb').textContent = 'Calculadora TMB solo para Hombre/Mujer';
         return;
     }
     let tmb = 0;
+    // Fórmula de Harris-Benedict (revisada)
     if(sex==='male') tmb = 10*weight + 6.25*height - 5*age + 5;
     else tmb = 10*weight + 6.25*height - 5*age - 161;
+    
     const maintenance = Math.round(tmb * activity);
     let target = maintenance;
     if(goal==='lose') target = Math.round(maintenance - 500);
@@ -701,9 +813,16 @@
   }
 
   // ====================
-  // Gráficos y Progreso
+  // Gráficos (Charts)
   // ====================
-  function makeDoughnut(ctxId, data, labels, colors){ /* ... */ }
+  function makeDoughnut(ctxId, data, labels, colors){
+    const ctx = document.getElementById(ctxId).getContext('2d');
+    return new Chart(ctx, {
+      type:'doughnut',
+      data:{labels:labels,datasets:[{data:data,backgroundColor:colors,borderWidth:2,borderColor:'rgba(0,0,0,0.15)'}]},
+      options:{ responsive:true,maintainAspectRatio:false,cutout:'60%', plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.parsed + '%'}}}}}
+    });
+  }
   let chartBalanced = makeDoughnut('chart-balanced',[30,45,25],['Proteínas','Carbohidratos','Grasas'],['#3b82f6','#fb923c','#10b981']);
   let chartKeto = makeDoughnut('chart-keto',[20,10,70],['Proteínas','Carbohidratos','Grasas'],['#3b82f6','#fb923c','#10b981']);
   let chartVegan = makeDoughnut('chart-vegan',[25,55,20],['Proteínas','Carbohidratos','Grasas'],['#3b82f6','#fb923c','#10b981']);
@@ -711,21 +830,128 @@
   const ctxP = document.getElementById('progressChart').getContext('2d');
   const savedProgress = JSON.parse(localStorage.getItem('fitlife_progress') || '[]');
   const progressChart = new Chart(ctxP, {type:'line',data:{labels:savedProgress.map(p=>p.date),datasets:[{label:'Peso (kg)',data:savedProgress.map(p=>p.weight),fill:false,tension:0.3, borderColor: 'var(--accent)'}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+  
+  // ====================
+  // Lógica del Diario
+  // ====================
+  const journalLogEl = document.getElementById('journal-log');
+  
+  function loadJournal() {
+      // Logic for journal and progress chart loading (same as before)
+      const journal = JSON.parse(localStorage.getItem('fitlife_journal') || '[]');
+      if (journal.length === 0) {
+          journalLogEl.innerHTML = '<p>Aún no hay entradas.</p>';
+      } else {
+          journalLogEl.innerHTML = '';
+          journal.reverse().slice(0, 10).forEach(entry => { // Mostrar solo las últimas 10 entradas
+              const entryEl = document.createElement('div');
+              entryEl.className = 'log-entry';
+              let summary = `<ul>`;
+              if (entry.workout) summary += `<li>✅ Entrenaste.</li>`;
+              if (entry.diet) summary += `<li>✅ Seguiste tu dieta.</li>`;
+              if (entry.water) summary += `<li>✅ Bebiste 2L de agua.</li>`;
+              if (entry.calories) summary += `<li>Consumiste aprox. <strong>${entry.calories} kcal</strong>.</li>`;
+              if (!entry.workout && !entry.diet && !entry.water && !entry.calories) {
+                  summary += `<li>No se registraron actividades este día.</li>`;
+              }
+              summary += `</ul>`;
+              entryEl.innerHTML = `<div class="log-entry-date">${entry.date}</div>${summary}`;
+              journalLogEl.appendChild(entryEl);
+          });
+      }
+      
+      const prog = JSON.parse(localStorage.getItem('fitlife_progress') || '[]');
+      progressChart.data.labels = prog.map(p=>p.date); 
+      progressChart.data.datasets[0].data = prog.map(p=>p.weight); 
+      progressChart.update(); 
+  }
 
-  function addProgress(){
-    const val = Number(document.getElementById('pesoInput').value); if(!val) return alert('Introduce un peso');
-    const arr = JSON.parse(localStorage.getItem('fitlife_progress') || '[]');
-    const now = new Date(); const label = now.toLocaleDateString();
-    arr.push({date:label,weight:val});
-    localStorage.setItem('fitlife_progress', JSON.stringify(arr));
-    progressChart.data.labels.push(label); progressChart.data.datasets[0].data.push(val); progressChart.update();
-    document.getElementById('pesoInput').value='';
-    document.getElementById('weight').value = val;
-    saveProfile();
+  function completeDay() {
+      const water = document.getElementById('track-water').checked;
+      const workout = document.getElementById('track-workout').checked;
+      const diet = document.getElementById('track-diet').checked;
+      const calories = document.getElementById('track-calories').value;
+      const weight = document.getElementById('pesoInput').value;
+      
+      const journal = JSON.parse(localStorage.getItem('fitlife_journal') || '[]');
+      const today = new Date().toLocaleDateString();
+
+      // Guardar entrada de diario
+      const existingIndex = journal.findIndex(entry => entry.date === today);
+      const newEntry = { date: today, water, workout, diet, calories };
+
+      if (existingIndex > -1) {
+          journal[existingIndex] = newEntry;
+      } else {
+          journal.push(newEntry);
+      }
+      localStorage.setItem('fitlife_journal', JSON.stringify(journal));
+
+      // Guardar peso si se introduce
+      if(weight) {
+          const arr = JSON.parse(localStorage.getItem('fitlife_progress') || '[]');
+          const now = new Date(); const label = now.toLocaleDateString();
+          arr.push({date:label,weight:Number(weight)});
+          localStorage.setItem('fitlife_progress', JSON.stringify(arr));
+          document.getElementById('weight').value = weight;
+          saveProfile(); // Actualiza perfil y cálculos
+      }
+      
+      alert('¡Día completado! Tu progreso ha sido guardado en el diario.');
+      
+      loadJournal(); // Recargar el diario y el gráfico
+      
+      // Limpiar el tracker
+      document.getElementById('track-water').checked = false;
+      document.getElementById('track-workout').checked = false;
+      document.getElementById('track-diet').checked = false;
+      document.getElementById('track-calories').value = '';
+      document.getElementById('pesoInput').value = '';
   }
   
   // ====================
-  // Asistente FitLifes¡GO! (NUEVO)
+  // Modal de Detalles y Selección
+  // ====================
+  const detailsModal = document.getElementById('details-modal');
+  const modalTitle = document.getElementById('modal-title-dynamic');
+  const modalBody = document.getElementById('modal-body-dynamic');
+  const modalFooter = document.getElementById('modal-footer-dynamic');
+
+  function closeDetailsModal() { detailsModal.classList.remove('visible'); }
+  document.getElementById('closeModal').onclick = closeDetailsModal;
+  detailsModal.onclick = (e) => { if(e.target === detailsModal) closeDetailsModal(); }; 
+
+  function showPlanDetails(planId) {
+      const plan = DATABASE.plans[planId]; if (!plan) return;
+      modalTitle.textContent = plan.title;
+      modalBody.innerHTML = plan.details;
+      modalFooter.innerHTML = `<button class="btn" onclick="selectPlan('${planId}', '${plan.title}')">Seleccionar este Plan</button>`;
+      detailsModal.classList.add('visible');
+  }
+
+  function showDietDetails(dietId) {
+      const diet = DATABASE.diets[dietId]; if (!diet) return;
+      modalTitle.textContent = diet.title;
+      modalBody.innerHTML = `<p><span class="badge">Macros: ${diet.macros}</span></p><hr style="border-color:var(--glass); margin: 15px 0;">${diet.details}`;
+      modalFooter.innerHTML = `<button class="btn" onclick="selectDiet('${diet.title}', '${dietId}'); closeDetailsModal();">Seleccionar esta Dieta</button>`;
+      detailsModal.classList.add('visible');
+  }
+
+  function selectDiet(name, dietId, silent = false){
+    document.getElementById('selectedDiet').textContent = name;
+    localStorage.setItem('fitlife_selected_diet', JSON.stringify({id: dietId, name: name}));
+    if(!silent) alert('Dieta "'+name+'" seleccionada y guardada.');
+  }
+
+  function selectPlan(planId, name){
+    document.getElementById('selectedPlan').textContent = name;
+    localStorage.setItem('fitlife_selected_plan', JSON.stringify({id: planId, name: name}));
+    alert('Plan "'+name+'" seleccionado y guardado.');
+    closeDetailsModal();
+  }
+
+  // ====================
+  // Asistente de Chat (MEJORADO)
   // ====================
   const messagesEl = document.getElementById('messages');
   function appendMessage(text, who='bot'){
@@ -739,27 +965,45 @@
       const t = text.toLowerCase();
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
       const goal = p ? p.goal : 'maintain';
+      const weight = p ? p.weight : null;
 
-      let response = 'Lo siento, no entendí eso. Pregunta algo sobre tu dieta, entrenamiento o progreso. Por ejemplo: "¿Qué plan es el mejor para mí?"';
-
-      if(t.includes('dieta') || t.includes('recomi')) {
-          if (goal === 'lose') response = 'Como tu objetivo es perder peso, enfócate en un déficit calórico. La Dieta Cetogénica (baja en carbos) o una Balanceada baja en calorías son buenas opciones. ¡Revisa la sección "Dietas"!';
-          else if (goal === 'gain') response = 'Para ganar músculo, necesitas un superávit calórico y consumir mucha proteína. La Dieta Balanceada, ajustando las porciones para más calorías, es ideal para ti.';
-          else response = 'Para mantenerte, una Dieta Balanceada es perfecta. Calcula tus calorías de mantenimiento en el panel "Mis Métricas" y síguelas.';
+      let response = 'Lo siento, no entendí eso. Pregúntame sobre dietas, ejercicios básicos o consejos de motivación.';
+      
+      if(t.includes('saludar') || t.includes('hola') || t.includes('qué tal')) {
+          response = '¡Hola! Soy tu Asistente FitLifes¡GO!. Estoy aquí para ayudarte con tus dudas de fitness, nutrición y progreso. ¿Cómo te sientes hoy?';
       }
-      else if(t.includes('entrenar') || t.includes('ejercicio')) {
-          if (goal === 'lose') response = 'Combina el entrenamiento de fuerza (para proteger el músculo) con mucho cardio (HIIT o de larga duración).';
-          else if (goal === 'gain') response = 'Enfócate en levantamiento de pesas con sobrecarga progresiva (aumentar peso o repeticiones cada semana). Descansa bien y come mucha proteína.';
-          else response = 'El entrenamiento de tonificación o un plan de 3 días full-body te ayudarán a mantenerte fuerte y en forma. ¡No olvides el cardio!';
+      else if(t.includes('dieta') || t.includes('comer') || t.includes('nutrición')) {
+          if (goal === 'lose') response = 'Para perder peso, enfócate en un déficit calórico de unas 500 kcal diarias y prioriza la proteína y fibra. ¡No te saltes los carbohidratos saludables!';
+          else if (goal === 'gain') response = 'Para ganar músculo, necesitas un superávit calórico y al menos 1.6g de proteína por kg de peso corporal. ¡Asegúrate de comer suficientes carbohidratos para energía!';
+          else response = 'Una dieta balanceada es clave. Asegúrate de incluir todos los grupos de alimentos y no exceder tus calorías de mantenimiento.';
       }
-      else if(t.includes('brazo') || t.includes('pecho')) response = 'Para el tren superior: curls de bíceps, press de banca, fondos y elevaciones laterales. Recuerda calentar bien.';
-      else if(t.includes('pierna') || t.includes('gluteo')) response = 'Para el tren inferior: sentadillas, peso muerto rumano, desplantes y prensa. Son cruciales para quemar más calorías y construir una base sólida.';
-      else if(t.includes('calor') || t.includes('caloría')) response = 'Tus calorías objetivo se calculan automáticamente en el panel "Mis Métricas" basándose en tu perfil y objetivo. Es la cantidad que debes consumir al día.';
-      else if(t.includes('agua') || t.includes('hidrat')) response = '¡El agua es vital! Intenta beber al menos 2-3 litros al día. El seguimiento en "Mi Día" te recordará el objetivo de 2L.';
-      else if(t.includes('descanso') || t.includes('dormir')) response = 'El descanso es tan importante como el entrenamiento. Intenta dormir 7-9 horas por noche; sin buen descanso, el músculo no se recupera ni crece.';
-      else if(t.includes('progres') || t.includes('diario')) response = 'Puedes registrar tu peso en el panel "Diario de Progreso" y tus actividades diarias en el panel "Seguimiento de Hoy". Todo se guarda automáticamente.';
-
-      appendMessage(response);
+      else if(t.includes('ejercicio') || t.includes('rutina') || t.includes('entrenar')) {
+          if (goal === 'lose') response = 'Combina el entrenamiento de fuerza (para mantener músculo) con 3-4 sesiones de cardio por semana (HIIT o de baja intensidad).';
+          else if (goal === 'gain') response = 'Concéntrate en ejercicios compuestos (sentadilla, peso muerto, press). 4-5 veces por semana con buena intensidad y descanso de 2 minutos entre series.';
+          else response = 'Busca un equilibrio. 3 días de fuerza y 2 de cardio ligero te ayudarán a mantener tu figura y salud cardiovascular.';
+      }
+      else if(t.includes('agua') || t.includes('hidratación')) {
+          response = 'La hidratación es vital. Intenta beber al menos 2-3 litros de agua al día, especialmente si entrenas. ¡Recuerda marcarlo en el Diario!';
+      }
+      else if(t.includes('descanso') || t.includes('dormir')) {
+          response = 'El descanso es donde ocurre la magia. Intenta dormir 7-9 horas. La falta de sueño afecta negativamente la quema de grasa y la recuperación muscular.';
+      }
+      else if(t.includes('objetivo') || t.includes('mi meta')) {
+          const goalName = goal === 'lose' ? 'Perder Peso' : (goal === 'gain' ? 'Ganar Músculo' : 'Mantener Peso');
+          response = `Tu objetivo actual está configurado como: **${goalName}**. ¡Sigue así!`;
+      }
+      else if(t.includes('calor') || t.includes('tmb')) {
+          response = 'La TMB (Tasa Metabólica Basal) es lo que tu cuerpo quema en reposo. Puedes ver tus cálculos en la pestaña "Inicio", sección "Mis Métricas".';
+      }
+      else if(t.includes('motivación') || t.includes('ánimo')) {
+          const quotes = ['"La disciplina es el puente entre tus metas y tus logros."', '"Hoy es el día de empezar de nuevo, no de rendirse."','Recuerda por qué empezaste. ¡Cada paso cuenta!'];
+          response = quotes[Math.floor(Math.random() * quotes.length)];
+      }
+      else if(t.includes('peso actual') && weight) {
+          response = `Tu último peso registrado es de ${weight} kg. ¡Sigue actualizando tu progreso en la pestaña Diario!`;
+      }
+      
+      appendMessage(response,'bot');
     },600);
   }
   document.getElementById('chatInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter') sendMessage(); });
@@ -775,143 +1019,73 @@
   }
 
   // ====================
-  // Lógica del Diario y Seguimiento
-  // ====================
-  const journalLogEl = document.getElementById('journal-log');
-  
-  function loadJournal() { /* ... (la función se mantiene) ... */ }
-  function completeDay() { /* ... (la función se mantiene) ... */ }
-
-
-  // ====================
   // Lógica de Carga Inicial y Controles
   // ====================
   const themeToggle = document.getElementById('themeToggle');
 
-  // Determinar si la vista es móvil (para activar el sistema de tabs)
-  const isMobile = window.matchMedia("(max-width: 900px)").matches;
-  const mainSections = document.querySelectorAll('#tutorial, #diario, #planes, #dietas, #contacto, #creditos');
-
-
-  /**
-   * NUEVO: Muestra una sección específica (para navegación de escritorio y tabs de móvil)
-   * @param {string} sectionId - ID de la sección a mostrar
-   */
-  function showSection(sectionId) {
-      // 1. Desactivar todos los activos
-      mainSections.forEach(s => s.classList.remove('mobile-active-section'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-      // 2. Activar la sección pedida
-      const targetSection = document.getElementById(sectionId);
-      if (targetSection) {
-          targetSection.classList.add('mobile-active-section');
-          // Desplazarse a la sección si es una vista móvil
-          if (isMobile) {
-              window.scrollTo({ top: document.getElementById('tracker').offsetTop, behavior: 'smooth' });
-          } else {
-              targetSection.scrollIntoView({behavior:'smooth'})
-          }
-      }
-
-      // 3. Activar el botón de la tab (solo si existe)
-      const tabButton = document.querySelector(`.tab-btn[data-section="${sectionId}"]`);
-      if (tabButton) {
-          tabButton.classList.add('active');
-      }
-  }
-
-
   window.addEventListener('load', ()=>{
-    // Cargar Tema
+    // 1. Cargar Tema
     const savedTheme = localStorage.getItem('fitlife_theme') || 'dark';
     document.body.setAttribute('data-theme', savedTheme);
     themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
 
+    // 2. Cargar Perfil y Decidir si mostrar Wizard/Tutorial
+    const firstLoad = localStorage.getItem('fitlife_first_load') !== 'false';
     const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
+    
     if(p) {
         loadProfile();
-        closeWizard();
-        welcomeAssistant();
-        showSection('tutorial'); // Muestra la guía rápida al inicio si el perfil ya existe
+        if(firstLoad) showTutorial();
     } else {
         showWizard();
     }
-
-    const prog = JSON.parse(localStorage.getItem('fitlife_progress') || '[]');
-    if(prog.length){ 
-        progressChart.data.labels = prog.map(p=>p.date); 
-        progressChart.data.datasets[0].data = prog.map(p=>p.weight); 
-        progressChart.update(); 
-    }
-
+    
     loadJournal();
+    welcomeAssistant();
 
-    // NUEVO: Manejo de clics en la navegación de escritorio
-    document.querySelectorAll('.desktop-nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const sectionId = e.target.getAttribute('href').replace('#', '');
-            showSection(sectionId);
-        });
-    });
-
-    // NUEVO: Manejo de clics en las tabs móviles
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const sectionId = btn.getAttribute('data-section');
-            showSection(sectionId);
-        });
-    });
-
-    // Si es móvil, la sección inicial es 'tutorial', si no, todas son visibles por el CSS de escritorio.
-    if (!isMobile) {
-        mainSections.forEach(s => s.classList.add('mobile-active-section'));
-    }
-
-    // Asegurar que el tutorial esté visible por defecto si el perfil ya existe y es móvil.
-    if (isMobile && p) {
-        showSection('tutorial');
+    // 3. Inicializar vista Desktop/Mobile (Mobile First por defecto)
+    if (window.innerWidth >= 900) {
+        switchSection('inicio');
+    } else {
+        // En móvil, asegurarse de que solo se ve la primera sección
+        document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('inicio').classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelector('.nav-item[data-target="inicio"]').classList.add('active');
     }
   });
 
   // Control de Tema
-  function toggleTheme() { /* ... (la función se mantiene) ... */ }
+  function toggleTheme() {
+    const el = document.body;
+    const cur = el.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    el.setAttribute('data-theme', cur);
+    localStorage.setItem('fitlife_theme', cur);
+    themeToggle.innerHTML = cur === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+  }
   themeToggle.addEventListener('click', toggleTheme);
 
-  // Control de Perfil
+  // Control de Perfil/Wizard
   const openRegister = document.getElementById('openRegister');
   openRegister.addEventListener('click', ()=>{
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
       if (p) {
-          // Llenar campos del wizard con datos guardados
+          // Carga los datos existentes en el wizard antes de mostrar
           document.getElementById('wiz-name').value = JSON.parse(localStorage.getItem('fitlife_user') || '{}').name || '';
           document.getElementById('wiz-sex').value = p.sex;
           document.getElementById('wiz-age').value = p.age;
           document.getElementById('wiz-height').value = p.height;
           document.getElementById('wiz-weight').value = p.weight;
           document.getElementById('wiz-activity').value = p.activity;
-          
-          if (p.sex === 'other' && p.customGender) {
-              document.getElementById('wiz-custom-gender').value = p.customGender;
-              document.getElementById('wiz-custom-gender').style.display = 'block';
-          } else {
-              document.getElementById('wiz-custom-gender').style.display = 'none';
-          }
-          
+          document.getElementById('custom-gender-input-wiz').value = p.customGender || '';
+          checkCustomGender('wiz-sex');
           selectWizardOption('goal', p.goal);
           const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null');
           if (d) document.getElementById('wiz-diet').value = d.id;
       }
       showWizard();
   });
-  
-  // ====================
-  // Lógica de Modales y Menú Móvil
-  // ====================
-  // Se mantienen las funciones showPlanDetails, showDietDetails, closeDetailsModal, selectDiet, selectPlan.
-  // También las funciones de apertura/cierre de Menú Móvil.
-  // (Debido a la longitud, se omite el código JS sin cambios en esta respuesta, pero debe estar en el HTML final).
+
 </script>
 </body>
 </html>
