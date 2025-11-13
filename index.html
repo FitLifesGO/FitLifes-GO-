@@ -225,9 +225,7 @@
     footer p { margin: 5px 0; }
     footer strong { color: var(--accent); }
 
-    /* ====================
-        NUEVO: Tarjeta de Perfil
-       ==================== */
+    /* Tarjeta de Perfil */
     #profile-header-card {
         display: flex;
         flex-direction: column;
@@ -245,20 +243,19 @@
     }
     #profile-header-card h2 {
         margin: 0;
-        color: white;
+        color: white; /* Mejor que el color por defecto */
     }
     #profile-header-card p {
         margin: -10px 0 0 0;
         font-size: 0.9rem;
         color: var(--muted);
+        text-align: center;
     }
     #profile-header-card p strong {
         color: var(--accent-2);
     }
 
-    /* ====================
-        Barra de Pestañas (Tab Bar)
-       ==================== */
+    /* Barra de Pestañas (Tab Bar) */
     .mobile-tab-bar {
         display: none; /* Oculto en desktop */
         position: fixed;
@@ -295,9 +292,7 @@
     .tab-btn.active { color: var(--accent); }
     .tab-btn:hover { background: var(--glass); }
 
-    /* ====================
-        Responsive
-       ==================== */
+    /* Responsive */
     @media (max-width:900px){
       header { padding: 15px; }
       main { padding: 15px; padding-bottom: 90px; }
@@ -306,14 +301,12 @@
       #mobile-menu-btn { display: block; }
       .mobile-tab-bar { display: block; }
 
-      /* Cambiar layout de grid a stack */
       .dashboard-grid { display: block; }
       .main-col, .sidebar-col { grid-column: auto; }
       .card[data-aos] { margin-top: 16px; }
       
       /* Ocultar hero y sidebar-card en móvil (ya están en pestañas) */
       .hero, #tracker-desktop-card { display: none; }
-      /* Mostrar el tracker móvil que estaba oculto */
       #tracker-mobile-card { display: block; }
 
       .diet-list { flex-direction: column; }
@@ -537,7 +530,7 @@
                     <input id="custom-gender" type="text" placeholder="¿Cómo te identificas? (opcional)">
                 </div>
                 <div class="form-row">
-                  <input id="height" type="number" placeholder="Altura (cm o 1.72)" />
+                  <input id="height" type="text" placeholder="Altura (cm o 1.72)" />
                   <input id="weight" type="number" placeholder="Peso (kg)" />
                 </div>
                 <div style="display:flex;gap:8px;margin-top:8px">
@@ -781,8 +774,8 @@
   let wizardData = { goal: 'maintain' };
   let areDietChartsInitialized = false;
   let isProgressChartInitialized = false;
-  let progressChart; // Variable para mantener la instancia del gráfico
-  let chartBalanced, chartKeto, chartVegan; // Instancias de gráficos de dieta
+  let progressChart;
+  let chartBalanced, chartKeto, chartVegan;
   
   // ==================== AOS init ====================
   AOS.init({once:true, duration:700});
@@ -824,6 +817,7 @@
       window.scrollTo(0, 0);
   }
 
+
   // ====================
   // Lógica del Cuestionario (Wizard)
   // ====================
@@ -854,7 +848,7 @@
 
   // Función de ayuda para altura
   function processHeight(heightStr) {
-      let height = heightStr.replace(',', '.');
+      let height = String(heightStr).replace(',', '.');
       if (height && parseFloat(height) > 0 && parseFloat(height) < 3) { // Asume que "1.72" es metros
           height = (parseFloat(height) * 100).toFixed(0);
       }
@@ -961,14 +955,21 @@
       const u = JSON.parse(localStorage.getItem('fitlife_user') || 'null');
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
       
-      if(p && u){ 
-          // Rellenar tarjeta de perfil
-          document.getElementById('profile-card-name').textContent = u.name || 'Usuario';
+      // 1. Cargar Tarjeta de Perfil
+      if (p && u) {
+          document.getElementById('profile-card-name').textContent = u.name;
           document.getElementById('profile-card-height').textContent = p.height || '--';
           document.getElementById('profile-card-weight').textContent = p.weight || '--';
           document.getElementById('profile-card-goal').textContent = p.goal ? (p.goal.charAt(0).toUpperCase() + p.goal.slice(1)) : '--';
+      } else {
+          document.getElementById('profile-card-name').textContent = 'Completa tu Perfil';
+          document.getElementById('profile-card-height').textContent = '--';
+          document.getElementById('profile-card-weight').textContent = '--';
+          document.getElementById('profile-card-goal').textContent = '--';
+      }
 
-          // Rellenar panel de Métricas
+      // 2. Cargar Panel de Métricas (si existe perfil)
+      if(p){ 
           document.getElementById('age').value = p.age; 
           document.getElementById('height').value = p.height; 
           document.getElementById('weight').value = p.weight; 
@@ -985,6 +986,7 @@
           calculateCalories(p.activity, p.goal);
       }
 
+      // 3. Cargar Panel Rápido (si existe perfil)
       const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null'); 
       if(d) document.getElementById('selectedDiet').textContent = d.name;
       else document.getElementById('selectedDiet').textContent = 'Ninguna';
@@ -1012,8 +1014,14 @@
           const reader = new FileReader();
           reader.onload = (e) => {
               const dataUrl = e.target.result;
-              localStorage.setItem('fitlife_profile_pic', dataUrl);
-              loadProfilePic(dataUrl);
+              try {
+                  localStorage.setItem('fitlife_profile_pic', dataUrl);
+                  loadProfilePic(dataUrl);
+              } catch (error) {
+                  // Error común si la imagen es muy grande para localStorage
+                  console.error("Error guardando imagen:", error);
+                  alert("Error: La imagen es demasiado grande. Por favor, elige una más pequeña.");
+              }
           };
           reader.readAsDataURL(file);
       });
@@ -1028,15 +1036,16 @@
   // Lógica de Cálculos
   // ====================
   function calculateIMC(){
-    const w = parseFloat(document.getElementById('weight').value);
-    const h = parseFloat(document.getElementById('height').value)/100;
+    const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
+    if (!p) return; // No calcular si no hay perfil
+    
+    const w = parseFloat(p.weight);
+    const h = parseFloat(p.height)/100;
     const el = document.getElementById('imcValue');
     if(!w || !h){ el.textContent = '—'; return }
     const imc = (w/(h*h)).toFixed(1);
     el.textContent = imc;
   }
-  document.getElementById('weight').addEventListener('input', calculateIMC);
-  document.getElementById('height').addEventListener('input', calculateIMC);
 
   function calculateCalories(activity_val = null, goal_val = null){
     const age = Number(document.getElementById('age').value);
@@ -1102,7 +1111,6 @@
 
 
   function addProgress(){
-    // Si el gráfico no existe (ej. nunca se ha visitado la pestaña), inicialízalo
     if (!isProgressChartInitialized) {
         initProgressChart();
     }
@@ -1121,7 +1129,7 @@
     
     document.getElementById('pesoInput').value='';
     document.getElementById('weight').value = val;
-    saveProfile(); // Guardar el perfil con el nuevo peso
+    saveProfile();
   }
   
   // ====================
@@ -1167,12 +1175,14 @@
     document.getElementById('selectedDiet').textContent = name;
     localStorage.setItem('fitlife_selected_diet', JSON.stringify({id: dietId, name: name}));
     if(!silent) alert('Dieta "'+name+'" seleccionada y guardada.');
+    loadProfile();
   }
 
   function selectPlan(planId, name){
     document.getElementById('selectedPlan').textContent = name;
     localStorage.setItem('fitlife_selected_plan', JSON.stringify({id: planId, name: name}));
     alert('Plan "'+name+'" seleccionado y guardado.');
+    loadProfile();
     closeDetailsModal();
   }
 
@@ -1190,7 +1200,13 @@
     setTimeout(()=>{
       const t = text.toLowerCase();
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
-      const goal = p ? p.goal : 'maintain';
+      
+      if (!p) {
+          appendMessage("¡Hola! Veo que no has completado tu perfil. Ve a la pestaña 'Perfil' o haz clic en 'Mi Perfil' para registrarte y poder ayudarte mejor.");
+          return;
+      }
+      
+      const goal = p.goal || 'maintain';
 
       if(t.includes('hola') || t.includes('buenos dias') || t.includes('buenas tardes')) {
           appendMessage('¡Hola! ¿En qué puedo ayudarte hoy?');
@@ -1234,7 +1250,7 @@
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
       
       if (!p || !u) {
-          appendMessage("¡Hola! Parece que eres nuevo. Completa el cuestionario (haz clic en 'Mi Perfil') para que pueda ayudarte mejor.");
+          appendMessage("¡Hola! Soy el Asistente FitLifes¡GO!. Parece que eres nuevo. Completa tu registro (en 'Mi Perfil' o en la pestaña 'Perfil') para que pueda ayudarte mejor.");
           return;
       }
       
@@ -1332,14 +1348,10 @@
     } else {
         showWizard();
     }
-
-    // Ya no se inicializan aquí, se mueven a showPage
-    // initProgressChart(); 
-    // initDietCharts();
     
     loadJournal();
-    welcomeAssistant(); // Se llamará y mostrará el mensaje correcto
-    initProfilePic(); // Configurar los listeners para la foto de perfil
+    welcomeAssistant();
+    initProfilePic();
 
     showPage('page-inicio', document.querySelector('.desktop-nav a'));
   });
@@ -1377,20 +1389,10 @@
       showWizard();
   }
   openRegister.addEventListener('click', openProfileEditor);
-OPEN_REGISTER_BTN_DUMMY_VAR.addEventListener('click', () => {
-      showPage('page-perfil');
-      // No necesitamos hacer nada más, la tarjeta de perfil ya está en la pág.
-  });
-  editProfileBtn.addEventListener('click', () => {
-      // Simula el clic en el botón de métricas para que el usuario edite
-      const metricsCard = document.getElementById('calculadora');
-      metricsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Destacar la tarjeta
-      metricsCard.style.transition = 'all 0.3s ease';
-      metricsCard.style.boxShadow = '0 0 25px var(--accent)';
-      setTimeout(() => {
-          metricsCard.style.boxShadow = '0 6px 22px rgba(2,6,23,0.25)';
-      }, 1500);
+OPEN_REGISTER_BTN_DUMMY_VAR.addEventListener('click', openProfileEditor); // ARREGLO: Botón de "Editar Perfil"
+  document.getElementById('mobile-profile-btn').addEventListener('click', () => { // ARREGLO: Botón de "Mi Perfil" en menú móvil
+      closeMobileMenu();
+      openProfileEditor();
   });
 
 
@@ -1406,17 +1408,23 @@ OPEN_REGISTER_BTN_DUMMY_VAR.addEventListener('click', () => {
       mobileMenuOverlay.classList.remove('visible');
   }
 
-  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu);
+  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu); // ARREGLO: Funcionalidad de botón
   document.getElementById('mobile-menu-close').addEventListener('click', closeMobileMenu);
   mobileMenuOverlay.addEventListener('click', (e) => {
       if (e.target === mobileMenuOverlay) {
           closeMobileMenu();
       }
   });
-  // Botón de Borrar Datos en menú móvil
-  document.getElementById('mobile-clear-data-btn').addEventListener('click', () => {
+  document.getElementById('mobile-theme-btn').addEventListener('click', () => { // ARREGLO: Botón de tema en móvil
+      toggleTheme();
+  });
+  document.getElementById('mobile-clear-data-btn').addEventListener('click', () => { // ARREGLO: Botón de borrar en móvil
       closeMobileMenu();
-      document.getElementById('clearData').click(); // Simula clic en el botón de borrar
+      // No existe un 'clearData' global, así que simulamos el del desktop
+      if(confirm('¿Estás seguro de que quieres borrar todos tus datos guardados (perfil, progreso, diario)?')){
+          localStorage.clear();
+          location.reload();
+      }
   });
 
 </script>
