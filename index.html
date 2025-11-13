@@ -57,6 +57,7 @@
     .desktop-controls{display:flex;gap:10px;align-items:center}
     .btn{background:var(--accent);color:#042027;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600; text-decoration:none; display:inline-block; text-align:center;}
     .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .btn.danger{background:#ef4444; color:#fff;}
 
     #mobile-menu-btn { display: none; }
 
@@ -178,7 +179,6 @@
       padding: 18px 28px; border-top: 1px solid var(--glass);
       display: flex; justify-content: flex-end;
     }
-    .modal-content .form-row { margin-bottom: 5px; } /* Ajuste de espacio en modales */
 
     /* Menú Móvil (Hamburguesa) */
     #mobile-menu-overlay { justify-content: flex-end; z-index: 110; }
@@ -214,9 +214,24 @@
     .log-entry{
         background: var(--glass); padding: 14px; border-radius: 10px;
         border-left: 4px solid var(--accent);
+        display: flex; justify-content: space-between; align-items: flex-start;
     }
+    .log-entry-content { flex: 1; }
     .log-entry-date{font-weight:700; color:var(--accent-2);}
     .log-entry ul{padding-left:20px; margin-bottom:0;}
+
+    /* Estilos para ítems personalizados */
+    .tracker-item[data-custom="true"] label:after { content: " (Personalizado)"; font-size: 0.8rem; opacity: 0.7; }
+    
+    /* Sección "Planes" */
+    .plan strong.active-status {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.8rem;
+        color: var(--accent);
+        font-weight: 700;
+    }
+
 
     /* Footer */
     footer{
@@ -306,7 +321,14 @@
       .main-col, .sidebar-col { grid-column: auto; }
       .card[data-aos] { margin-top: 16px; }
       
-      .hero, #tracker-desktop-card { display: none; }
+      .hero { 
+          display: block; 
+          margin-bottom: 0;
+      }
+      .hero .card:first-child { display: none; } /* Oculta la columna grande */
+      .hero .card:last-child { margin-bottom: 16px; } /* Muestra el panel rápido en móvil */
+
+      #tracker-desktop-card { display: none; }
       #tracker-mobile-card { display: block; }
 
       .diet-list { flex-direction: column; }
@@ -331,9 +353,8 @@
       <a onclick="showPage('page-inicio', this)" class="active">Inicio</a>
       <a onclick="showPage('page-diario', this)">Diario</a>
       <a onclick="showPage('page-planes', this)">Planes</a>
-      <a onclick="showPage('page-comunidad', this)">Comunidad</a>
       <a onclick="showPage('page-perfil', this)">Perfil</a>
-      <a onclick="showPage('page-info', this)">Info</a>
+      <a onclick="showPage('page-ayuda', this)">Ayuda</a>
     </nav>
     <div class="desktop-controls">
       <button id="themeToggle" class="btn secondary" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
@@ -354,7 +375,7 @@
                       <p>Planes personalizados, calculadoras, seguimiento y un sistema visual de dietas con gráficos para entender tus macros de forma rápida.</p>
                       <div class="hero-buttons">
                         <button class="btn" onclick="showPage('page-planes')">Ver Planes</button>
-                        <button class="btn secondary" onclick="showPage('page-diario')">Mi Diario</button>
+                        <button class="btn secondary" id="openAssistantQuick">Hablar con Asistente</button>
                       </div>
                     </div>
               
@@ -370,32 +391,17 @@
                 <div class="card" id="tracker-mobile-card" data-aos="fade-up">
                     <div id="tracker" class="content-stack">
                         <h3>Seguimiento de Hoy</h3>
-                        <div class="tracker-item"> <input type="checkbox" id="track-water"> <label for="track-water">Bebí 2L de agua</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-workout"> <label for="track-workout">Entrené hoy</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-diet"> <label for="track-diet">Seguí mi dieta</label> </div>
-                        <hr style="border-color:var(--glass); margin: 8px 0;">
-                        <div class="tracker-item"> <input type="checkbox" id="track-sleep"> <label for="track-sleep">Dormí al menos 7 horas</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-fruit"> <label for="track-fruit">Comí 5 porciones de verdura/fruta</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-stretch"> <label for="track-stretch">Hice estiramientos / movilidad</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-meditate"> <label for="track-meditate">Medité 10 minutos</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-supplement"> <label for="track-supplement">Tomé mi suplemento (ej. proteína)</label> </div>
-                        <hr style="border-color:var(--glass); margin: 8px 0;">
-                        <div id="tracker-custom-mobile"></div>
-
+                        <div id="tracker-items-list">
+                            </div>
+                        <div class="form-row" style="margin-bottom:0; align-items:flex-end;"> 
+                            <input type="text" id="customTrackerInput" placeholder="Añade tu ítem de seguimiento..." style="flex:2;"> 
+                            <button class="btn secondary" onclick="addCustomTrackerItem()"><i class="fa-solid fa-plus"></i> Añadir</button>
+                        </div>
                         <hr style="border-color:var(--glass); margin: 12px 0;">
-                        <div class="form-row"> <input type="number" id="track-calories" placeholder="Calorías consumidas (ej: 1800)"> </div>
-                        <button class="btn" style="width:100%" onclick="completeDay()">Completar Día</button>
-                    </div>
-                </div>
-
-                <div class="card" data-aos="fade-up">
-                    <h3>Asistente FitLifes¡GO!</h3>
-                    <div class="chat">
-                      <div class="messages" id="messages"></div>
-                      <div class="chat-input">
-                        <input id="chatInput" placeholder="Pregúntame algo..." />
-                        <button class="btn" onclick="sendMessage()">Enviar</button>
-                      </div>
+                        <div class="form-row"> 
+                            <input type="number" id="track-calories" placeholder="Calorías consumidas (ej: 1800)"> 
+                        </div>
+                        <button class="btn" style="width:100%" onclick="completeDay(false)">Completar Día</button>
                     </div>
                 </div>
 
@@ -405,24 +411,32 @@
                 <div id="tracker-desktop-card" class="card" data-aos="fade-left">
                     <div id="tracker" class="content-stack">
                         <h3>Seguimiento de Hoy</h3>
-                        <div class="tracker-item"> <input type="checkbox" id="track-water-desktop"> <label for="track-water-desktop">Bebí 2L de agua</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-workout-desktop"> <label for="track-workout-desktop">Entrené hoy</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-diet-desktop"> <label for="track-diet-desktop">Seguí mi dieta</label> </div>
-                        <hr style="border-color:var(--glass); margin: 8px 0;">
-                        <div class="tracker-item"> <input type="checkbox" id="track-sleep-desktop"> <label for="track-sleep-desktop">Dormí al menos 7 horas</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-fruit-desktop"> <label for="track-fruit-desktop">Comí 5 porciones de verdura/fruta</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-stretch-desktop"> <label for="track-stretch-desktop">Hice estiramientos / movilidad</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-meditate-desktop"> <label for="track-meditate-desktop">Medité 10 minutos</label> </div>
-                        <div class="tracker-item"> <input type="checkbox" id="track-supplement-desktop"> <label for="track-supplement-desktop">Tomé mi suplemento (ej. proteína)</label> </div>
-                        <hr style="border-color:var(--glass); margin: 8px 0;">
-                        <div id="tracker-custom-desktop"></div>
-
+                        <div id="tracker-items-list-desktop">
+                            </div>
+                        <div class="form-row" style="margin-bottom:0; align-items:flex-end;"> 
+                            <input type="text" id="customTrackerInputDesktop" placeholder="Añade tu ítem de seguimiento..." style="flex:2;"> 
+                            <button class="btn secondary" onclick="addCustomTrackerItem(true)"><i class="fa-solid fa-plus"></i> Añadir</button>
+                        </div>
                         <hr style="border-color:var(--glass); margin: 12px 0;">
-                        <div class="form-row"> <input type="number" id="track-calories-desktop" placeholder="Calorías consumidas (ej: 1800)"> </div>
+                        <div class="form-row"> 
+                            <input type="number" id="track-calories-desktop" placeholder="Calorías consumidas (ej: 1800)"> 
+                        </div>
                         <button class="btn" style="width:100%" onclick="completeDay(true)">Completar Día</button>
                     </div>
                 </div>
             </div>
+            
+            <div class="card" style="grid-column: 1 / span 12; margin-top: 10px;" data-aos="fade-up">
+                <h3>Asistente FitLifes¡GO!</h3>
+                <div class="chat">
+                  <div class="messages" id="messages"></div>
+                  <div class="chat-input">
+                    <input id="chatInput" placeholder="Pregúntame algo..." />
+                    <button class="btn" onclick="sendMessage()">Enviar</button>
+                  </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -431,14 +445,14 @@
             <div id="diario" class="card" data-aos="fade-up">
                 <h3>Diario de Progreso</h3>
                 <p>Aquí se guarda un resumen de tus actividades diarias y tu progreso de peso.</p>
-                <div class="grid" style="align-items: start;">
-                    <div class="col-8">
+                <div class="dashboard-grid" style="align-items: start;">
+                    <div class="main-col">
                         <h4>Historial de Actividad</h4>
                         <div id="journal-log" class="journal-log">
                             <p>Aún no hay entradas. Completa tu día para empezar.</p>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="sidebar-col">
                         <h4>Progreso de Peso</h4>
                         <canvas id="progressChart"></canvas>
                         <div style="margin-top:8px;display:flex;gap:8px">
@@ -456,22 +470,34 @@
             <div id="planes" class="card" data-aos="fade-up">
               <h3>Planes de Entrenamiento (Todos Gratis)</h3>
               <div class="plans">
-                <div class="plan">
+                <div class="plan" data-plan-id="weight_loss">
                   <h4>Pérdida de peso</h4> <p>Entrenamientos HIIT, 4x...</p>
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
                     <div class="price">Gratis</div> <button class="btn secondary" onclick="showPlanDetails('weight_loss')">Ver más</button>
                   </div>
                 </div>
-                <div class="plan">
+                <div class="plan" data-plan-id="muscle_gain">
                   <h4>Aumento muscular</h4> <p>Fuerza y volumen, 5x...</p>
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
                     <div class="price">Gratis</div> <button class="btn secondary" onclick="showPlanDetails('muscle_gain')">Ver más</button>
                   </div>
                 </div>
-                <div class="plan">
+                <div class="plan" data-plan-id="toning">
                   <h4>Tonificación</h4> <p>Combinación cardio-fuerza, 3x...</p>
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
                     <div class="price">Gratis</div> <button class="btn secondary" onclick="showPlanDetails('toning')">Ver más</button>
+                  </div>
+                </div>
+                <div class="plan" data-plan-id="endurance">
+                  <h4>Resistencia (Running)</h4> <p>Entrenos de larga distancia y velocidad, 3x...</p>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                    <div class="price">Gratis</div> <button class="btn secondary" onclick="showPlanDetails('endurance')">Ver más</button>
+                  </div>
+                </div>
+                <div class="plan" data-plan-id="calisthenics">
+                  <h4>Calistenia (Bodyweight)</h4> <p>Dominadas, fondos y control corporal, 4x...</p>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                    <div class="price">Gratis</div> <button class="btn secondary" onclick="showPlanDetails('calisthenics')">Ver más</button>
                   </div>
                 </div>
               </div>
@@ -480,7 +506,7 @@
             <div id="dietas" class="card" data-aos="fade-up">
               <h3>Planes de Dieta</h3>
               <div class="diet-list">
-                <div class="diet-card card" data-diet="balanced">
+                <div class="diet-card card" data-diet-id="balanced">
                   <div class="chart-wrap"><canvas id="chart-balanced"></canvas></div>
                   <div class="diet-info">
                     <h4>Balanceada</h4> <p>Macros: <span class="badge">P 30% • C 45% • G 25%</span></p>
@@ -490,7 +516,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="diet-card card" data-diet="keto">
+                <div class="diet-card card" data-diet-id="keto">
                   <div class="chart-wrap"><canvas id="chart-keto"></canvas></div>
                   <div class="diet-info">
                     <h4>Cetogénica</h4> <p>Macros: <span class="badge">P 20% • C 10% • G 70%</span></p>
@@ -500,7 +526,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="diet-card card" data-diet="vegan">
+                <div class="diet-card card" data-diet-id="vegan">
                   <div class="chart-wrap"><canvas id="chart-vegan"></canvas></div>
                   <div class="diet-info">
                     <h4>Vegana</h4> <p>Macros: <span class="badge">P 25% • C 55% • G 20%</span></p>
@@ -510,28 +536,17 @@
                     </div>
                   </div>
                 </div>
+                <div class="diet-card card" data-diet-id="intermittent">
+                  <div class="chart-wrap"><canvas id="chart-intermittent"></canvas></div>
+                  <div class="diet-info">
+                    <h4>Ayuno Intermitente 16/8</h4> <p>Macros: <span class="badge">P 35% • C 40% • G 25%</span></p>
+                    <div style="margin-top:8px">
+                      <button class="btn" onclick="selectDiet('Ayuno Intermitente 16/8', 'intermittent')">Seleccionar</button>
+                      <button class="btn secondary" onclick="showDietDetails('intermittent')">Detalles</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="page-comunidad" class="tab-page">
-        <div class="content-stack">
-            <div class="card" data-aos="fade-up">
-                <h3>Comunidad FitLifes¡GO!</h3>
-                <p><strong>¡Esta es tu sección social!</strong> Aquí podrás ver los logros de otros usuarios, participar en retos virtuales y compartir tus avances. (Función en desarrollo...)</p>
-                <div style="padding:15px; border: 1px dashed var(--accent); border-radius:10px; margin-top:15px;">
-                    <h4>Reto Semanal de Sentadillas</h4>
-                    <p>Únete a la comunidad y completa 100 sentadillas en 5 días. 🏋️‍♀️</p>
-                    <button class="btn secondary">Unirme al Reto (Simulado)</button>
-                </div>
-                <h4 style="margin-top:20px">Publicaciones Recientes</h4>
-                <div style="background:var(--glass); padding:15px; border-radius:8px; margin-bottom:10px;">
-                    <strong>@fitness_pro12:</strong> ¡Logré mi objetivo de 50kg levantados en press banca! Gracias FitLifes¡GO! 💪
-                </div>
-                <div style="background:var(--glass); padding:15px; border-radius:8px;">
-                    <strong>@dieta_keto:</strong> Mi IMC bajó de 28.1 a 27.9 esta semana. ¡El gráfico de progreso ayuda mucho! 📉
-                </div>
             </div>
         </div>
     </div>
@@ -580,28 +595,13 @@
                 <p>Calorías objetivo: <strong id="targetCalories">—</strong></p>
               </div>
             </div>
-
-            <div id="custom-tracker-settings" class="card" data-aos="fade-up">
-                <h3>Objetivos Personalizados del Diario</h3>
-                <p>Define hasta 3 objetivos para tu seguimiento diario. Se guardan al instante.</p>
-                <div class="form-row">
-                    <input id="custom-1" type="text" placeholder="Objetivo 1 (ej: Leer 10 páginas)" onchange="saveCustomTrackers()">
-                </div>
-                <div class="form-row">
-                    <input id="custom-2" type="text" placeholder="Objetivo 2 (ej: Llamar a mi madre)" onchange="saveCustomTrackers()">
-                </div>
-                <div class="form-row">
-                    <input id="custom-3" type="text" placeholder="Objetivo 3 (ej: Preparar la comida de mañana)" onchange="saveCustomTrackers()">
-                </div>
-            </div>
-
         </div>
     </div>
     
-    <div id="page-info" class="tab-page">
+    <div id="page-ayuda" class="tab-page">
         <div class="content-stack">
             <div class="card" data-aos="fade-up">
-                <h3>Información y Ayuda</h3>
+                <h3>Ayuda</h3>
                 <p>¿No sabes cómo empezar? Vuelve a ver el tutorial.</p>
                 <button class="btn" onclick="startTutorial()">Ver Mini-Tutorial</button>
             </div>
@@ -650,9 +650,9 @@
             <i class="fa-solid fa-book-bookmark"></i>
             <span>Planes</span>
         </button>
-        <button id="nav-comunidad" class="tab-btn" onclick="showPage('page-comunidad', this)">
-            <i class="fa-solid fa-users"></i>
-            <span>Comunidad</span>
+        <button id="nav-ayuda" class="tab-btn" onclick="showPage('page-ayuda', this)">
+            <i class="fa-solid fa-circle-question"></i>
+            <span>Ayuda</span>
         </button>
         <button id="nav-perfil" class="tab-btn" onclick="showPage('page-perfil', this)">
             <i class="fa-solid fa-user"></i>
@@ -663,159 +663,130 @@
 
   <div id="wizard-modal" class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-body" style="flex:1;">
-        <div id="step-1" class="wizard-step active">
-            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¡Bienvenido a FitLifes¡GO!</h2>
-            <p>Vamos a configurar tu perfil. Esto solo tomará un minuto y nos ayudará a personalizar tu experiencia.</p>
-            <div class="wizard-nav">
-                <span></span> <button class="btn" onclick="nextStep(2)">Comenzar</button>
-            </div>
-        </div>
-        <div id="step-2" class="wizard-step">
-            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¿Cuál es tu objetivo principal?</h2>
-            <div class="wizard-options">
-                <div class="option" id="goal-lose" onclick="selectWizardOption('goal', 'lose')">Perder Peso</div>
-                <div class="option" id="goal-maintain" onclick="selectWizardOption('goal', 'maintain')">Mantener Peso</div>
-                <div class="option" id="goal-gain" onclick="selectWizardOption('goal', 'gain')">Ganar Músculo</div>
-            </div>
-            <div class="wizard-nav">
-                <button class="btn secondary" onclick="prevStep(1)">Atrás</button>
-                <button class="btn" onclick="nextStep(3)">Siguiente</button>
-            </div>
-        </div>
-        <div id="step-3" class="wizard-step">
-            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Cuéntanos sobre ti</h2>
-            <p>Usaremos esto para calcular tus calorías, IMC y TMB.</p>
-            <div class="form-row">
-                <input id="wiz-name" type="text" placeholder="Tu Nombre" />
-                <select id="wiz-sex" onchange="checkCustomGender('wiz-sex', 'wiz-custom-gender-wrapper')">
-                    <option value="male">Hombre</option>
-                    <option value="female">Mujer</option>
-                    <option value="other">Otro</option>
-                </select>
-            </div>
-            <div id="wiz-custom-gender-wrapper" class="form-row" style="display:none; margin-top:-5px; margin-bottom:10px;">
-                <input id="wiz-custom-gender" type="text" placeholder="¿Cómo te identificas? (opcional)">
-            </div>
-            <div class="form-row">
-                <input id="wiz-age" type="number" placeholder="Edad" />
-                <input id="wiz-height" type="text" placeholder="Altura (cm o 1.72)" />
-                <input id="wiz-weight" type="number" placeholder="Peso (kg)" />
-            </div>
-            <div class="wizard-nav">
-                <button class="btn secondary" onclick="prevStep(2)">Atrás</button>
-                <button class="btn" onclick="nextStep(4)">Siguiente</button>
-            </div>
-        </div>
-        <div id="step-4" class="wizard-step">
-            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Tu Estilo de Vida</h2>
-            <p>Nivel de Actividad Física:</p>
-            <select id="wiz-activity" style="width:100%; margin-bottom: 12px;">
-                <option value="1.2">Sedentario (poco o nada)</option>
-                <option value="1.375">Ligero (1-3 días/semana)</option>
-                <option value="1.55">Moderado (3-5 días/semana)</option>
-                <option value="1.725">Activo (6-7 días/semana)</option>
-                <option value="1.9">Muy activo (trabajo físico + ejercicio)</option>
-            </select>
-            <p>Preferencia de Dieta (Opcional):</p>
-            <select id="wiz-diet" style="width:100%">
-                <option value="">Ninguna en especial</option>
-                <option value="balanced">Balanceada</option>
-                <option value="keto">Cetogénica</option>
-                <option value="vegan">Vegana</option>
-            </select>
-            <div class="wizard-nav">
-                <button class="btn secondary" onclick="prevStep(3)">Atrás</button>
-                <button class="btn" onclick="nextStep(5)">Siguiente</button>
-            </div>
-        </div>
-        <div id="step-5" class="wizard-step">
-            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Objetivos Adicionales</h2>
-            <p>Define hasta 3 objetivos personales para hacerles seguimiento diario:</p>
-            <div class="form-row">
-                <input id="wiz-custom-1" type="text" placeholder="Objetivo 1 (ej: Leer 10 páginas)">
-            </div>
-            <div class="form-row">
-                <input id="wiz-custom-2" type="text" placeholder="Objetivo 2 (ej: Llamar a un amigo)">
-            </div>
-            <div class="form-row">
-                <input id="wiz-custom-3" type="text" placeholder="Objetivo 3 (ej: Estudiar para el examen)">
-            </div>
-            <div class="wizard-nav">
-                <button class="btn secondary" onclick="prevStep(4)">Atrás</button>
-                <button class="btn" onclick="completeWizard()">Finalizar</button>
-            </div>
-        </div>
+      <div id="step-1" class="wizard-step active">
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¡Bienvenido a FitLifes¡GO!</h2>
+          <p>Vamos a configurar tu perfil. Esto solo tomará un minuto y nos ayudará a personalizar tu experiencia.</p>
+          <div class="wizard-nav">
+              <span></span> <button class="btn" onclick="nextStep(2)">Comenzar</button>
+          </div>
+      </div>
+      <div id="step-2" class="wizard-step">
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¿Cuál es tu objetivo principal?</h2>
+          <div class="wizard-options">
+              <div class="option" id="goal-lose" onclick="selectWizardOption('goal', 'lose')">Perder Peso</div>
+              <div class="option" id="goal-maintain" onclick="selectWizardOption('goal', 'maintain')">Mantener Peso</div>
+              <div class="option" id="goal-gain" onclick="selectWizardOption('goal', 'gain')">Ganar Músculo</div>
+          </div>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="prevStep(1)">Atrás</button>
+              <button class="btn" onclick="nextStep(3)">Siguiente</button>
+          </div>
+      </div>
+      <div id="step-3" class="wizard-step">
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Cuéntanos sobre ti</h2>
+          <p>Usaremos esto para calcular tus calorías, IMC y TMB.</p>
+          <div class="form-row">
+              <input id="wiz-name" type="text" placeholder="Tu Nombre" />
+              <select id="wiz-sex" onchange="checkCustomGender('wiz-sex', 'wiz-custom-gender-wrapper')">
+                  <option value="male">Hombre</option>
+                  <option value="female">Mujer</option>
+                  <option value="other">Otro</option>
+              </select>
+          </div>
+          <div id="wiz-custom-gender-wrapper" class="form-row" style="display:none; margin-top:-5px; margin-bottom:10px;">
+              <input id="wiz-custom-gender" type="text" placeholder="¿Cómo te identificas? (opcional)">
+          </div>
+          <div class="form-row">
+              <input id="wiz-age" type="number" placeholder="Edad" />
+              <input id="wiz-height" type="text" placeholder="Altura (cm o 1.72)" />
+              <input id="wiz-weight" type="number" placeholder="Peso (kg)" />
+          </div>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="prevStep(2)">Atrás</button>
+              <button class="btn" onclick="nextStep(4)">Siguiente</button>
+          </div>
+      </div>
+      <div id="step-4" class="wizard-step">
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Tu Estilo de Vida</h2>
+          <p>Nivel de Actividad Física:</p>
+          <select id="wiz-activity" style="width:100%; margin-bottom: 12px;">
+              <option value="1.2">Sedentario (poco o nada)</option>
+              <option value="1.375">Ligero (1-3 días/semana)</option>
+              <option value="1.55">Moderado (3-5 días/semana)</option>
+              <option value="1.725">Activo (6-7 días/semana)</option>
+              <option value="1.9">Muy activo (trabajo físico + ejercicio)</option>
+          </select>
+          <p>Preferencia de Dieta (Opcional):</p>
+          <select id="wiz-diet" style="width:100%">
+              <option value="">Ninguna en especial</option>
+              <option value="balanced">Balanceada</option>
+              <option value="keto">Cetogénica</option>
+              <option value="vegan">Vegana</option>
+              <option value="intermittent">Ayuno Intermitente 16/8</option>
+          </select>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="prevStep(3)">Atrás</button>
+              <button class="btn" onclick="completeWizard()">Finalizar</button>
+          </div>
       </div>
     </div>
   </div>
 
   <div id="tutorial-modal" class="modal-overlay">
     <div class="modal-content">
-        <div class="modal-body" style="flex:1; display: flex; flex-direction: column; justify-content: center;">
-            <div id="tut-step-1" class="wizard-step active" style="text-align:center;">
-                <i class="fa-solid fa-rocket" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">¡Todo listo!</h2>
-                <p>Te damos un tour rápido por tu nueva app.</p>
-                <div class="wizard-nav">
-                    <span></span> <button class="btn" onclick="showTutorialStep(2)">Siguiente</button>
-                </div>
-            </div>
-            <div id="tut-step-2" class="wizard-step" style="text-align:center;">
-                <i class="fa-solid fa-house" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Inicio"</h2>
-                <p>Aquí tienes tu vista principal: tu panel rápido (en escritorio), el registro de "Mi Día" con **más opciones** y el Asistente.</p>
-                <div class="wizard-nav">
-                    <button class="btn secondary" onclick="showTutorialStep(1)">Atrás</button>
-                    <button class="btn" onclick="showTutorialStep(3)">Siguiente</button>
-                </div>
-            </div>
-            <div id="tut-step-3" class="wizard-step" style="text-align:center;">
-                <i class="fa-solid fa-chart-line" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Diario"</h2>
-                <p>Aquí verás tu progreso. Revisa tu historial de actividades y mira cómo avanza tu peso en el gráfico.</p>
-                <div class="wizard-nav">
-                    <button class="btn secondary" onclick="showTutorialStep(2)">Atrás</button>
-                    <button class="btn" onclick="showTutorialStep(4)">Siguiente</button>
-                </div>
-            </div>
-            <div id="tut-step-4" class="wizard-step" style="text-align:center;">
-                <i class="fa-solid fa-book-bookmark" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Planes"</h2>
-                <p>Explora y selecciona los planes de entrenamiento y las dietas que quieras seguir. ¡Todos son gratis!</p>
-                <div class="wizard-nav">
-                    <button class="btn secondary" onclick="showTutorialStep(3)">Atrás</button>
-                    <button class="btn" onclick="showTutorialStep(5)">Siguiente</button>
-                </div>
-            </div>
-            <div id="tut-step-5" class="wizard-step" style="text-align:center;">
-                <i class="fa-solid fa-users" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Comunidad"</h2>
-                <p>Una nueva sección social para compartir logros y participar en retos. (Simulada por ahora).</p>
-                <div class="wizard-nav">
-                    <button class="btn secondary" onclick="showTutorialStep(4)">Atrás</button>
-                    <button class="btn" onclick="showTutorialStep(6)">Siguiente</button>
-                </div>
-            </div>
-            <div id="tut-step-6" class="wizard-step" style="text-align:center;">
-                <i class="fa-solid fa-user" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Perfil"</h2>
-                <p>Aquí puedes ver y editar tus métricas, ¡y también definir tus **objetivos de seguimiento personalizados**!</p>
-                <div class="wizard-nav">
-                    <button class="btn secondary" onclick="showTutorialStep(5)">Atrás</button>
-                    <button class="btn" onclick="showTutorialStep(7)">Siguiente</button>
-                </div>
-            </div>
-            <div id="tut-step-7" class="wizard-step" style="text-align:center;">
-                <i class="fa-solid fa-circle-question" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Info"</h2>
-                <p>Si alguna vez te pierdes, aquí puedes volver a ver este tutorial, contactarnos o ver los créditos. ¡Estás listo para empezar!</p>
-                <div class="wizard-nav">
-                    <button class="btn secondary" onclick="showTutorialStep(6)">Atrás</button>
-                    <button class="btn" onclick="closeTutorial()">¡Entendido!</button>
-                </div>
-            </div>
-        </div>
+      <div id="tut-step-1" class="wizard-step active" style="text-align:center;">
+          <i class="fa-solid fa-rocket" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">¡Todo listo!</h2>
+          <p>Te damos un tour rápido por tu nueva app.</p>
+          <div class="wizard-nav">
+              <span></span> <button class="btn" onclick="showTutorialStep(2)">Siguiente</button>
+          </div>
+      </div>
+      <div id="tut-step-2" class="wizard-step" style="text-align:center;">
+          <i class="fa-solid fa-house" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Inicio"</h2>
+          <p>Aquí tienes tu vista principal: tu panel rápido (en escritorio), el registro de "Mi Día" y el Asistente. Es tu centro de operaciones.</p>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="showTutorialStep(1)">Atrás</button>
+              <button class="btn" onclick="showTutorialStep(3)">Siguiente</button>
+          </div>
+      </div>
+      <div id="tut-step-3" class="wizard-step" style="text-align:center;">
+          <i class="fa-solid fa-chart-line" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Diario"</h2>
+          <p>Aquí verás tu progreso. Revisa tu historial de actividades y mira cómo avanza tu peso en el gráfico.</p>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="showTutorialStep(2)">Atrás</button>
+              <button class="btn" onclick="showTutorialStep(4)">Siguiente</button>
+          </div>
+      </div>
+      <div id="tut-step-4" class="wizard-step" style="text-align:center;">
+          <i class="fa-solid fa-book-bookmark" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Planes"</h2>
+          <p>Explora y selecciona los planes de entrenamiento y las dietas que quieras seguir. ¡Todos son gratis!</p>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="showTutorialStep(3)">Atrás</button>
+              <button class="btn" onclick="showTutorialStep(5)">Siguiente</button>
+          </div>
+      </div>
+      <div id="tut-step-5" class="wizard-step" style="text-align:center;">
+          <i class="fa-solid fa-user" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Perfil"</h2>
+          <p>¡Este eres tú! Aquí puedes ver tu foto, tus estadísticas y editar tus métricas de peso, altura y más.</p>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="showTutorialStep(4)">Atrás</button>
+              <button class="btn" onclick="showTutorialStep(6)">Siguiente</button>
+          </div>
+      </div>
+      <div id="tut-step-6" class="wizard-step" style="text-align:center;">
+          <i class="fa-solid fa-circle-question" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Ayuda"</h2>
+          <p>Si alguna vez te pierdes, aquí puedes volver a ver este tutorial, contactarnos o ver los créditos. ¡Estás listo para empezar!</p>
+          <div class="wizard-nav">
+              <button class="btn secondary" onclick="showTutorialStep(5)">Atrás</button>
+              <button class="btn" onclick="closeTutorial()">¡Entendido!</button>
+          </div>
+      </div>
     </div>
   </div>
 
@@ -845,12 +816,15 @@
       plans: {
           'weight_loss': { title: 'Plan: Pérdida de peso', details: `<h3>Rutina Semanal (Ejemplo)</h3><ul><li><strong>Lunes:</strong> HIIT Total (30 min)</li><li><strong>Miércoles:</strong> Foco Abdomen y Piernas (40 min)</li><li><strong>Viernes:</strong> HIIT Cardio Intenso (35 min)</li><li><strong>Sábado:</strong> Full Body Strength (45 min)</li></ul>`},
           'muscle_gain': { title: 'Plan: Aumento muscular', details: `<h3>Rutina Semanal (Ejemplo)</h3><ul><li><strong>Lunes:</strong> Pecho y Tríceps</li><li><strong>Martes:</strong> Espalda y Bíceps</li><li><strong>Miércoles:</strong> Piernas</li><li><strong>Viernes:</strong> Hombros y Trapecio</li><li><strong>Sábado:</strong> Full Body</li></ul>`},
-          'toning': { title: 'Plan: Tonificación', details: `<h3>Rutina Semanal (Ejemplo)</h3><ul><li><strong>Día 1:</strong> Full Body A + 15 min Cardio</li><li><strong>Día 3:</strong> Full Body B + 15 min HIIT</li><li><strong>Día 5:</strong> Full Body C + 20 min Cardio</li></ul>`}
+          'toning': { title: 'Plan: Tonificación', details: `<h3>Rutina Semanal (Ejemplo)</h3><ul><li><strong>Día 1:</strong> Full Body A + 15 min Cardio</li><li><strong>Día 3:</strong> Full Body B + 15 min HIIT</li><li><strong>Día 5:</strong> Full Body C + 20 min Cardio</li></ul>`},
+          'endurance': { title: 'Plan: Resistencia (Running)', details: `<h3>Entrenamiento Semanal (Ejemplo)</h3><ul><li><strong>Martes:</strong> Carrera de Tempo (5km)</li><li><strong>Jueves:</strong> Intervalos (8x400m)</li><li><strong>Sábado:</strong> Carrera Larga (12km)</li><li><strong>Domingo:</strong> Recuperación activa.</li></ul>`},
+          'calisthenics': { title: 'Plan: Calistenia (Bodyweight)', details: `<h3>Rutina Semanal (Ejemplo)</h3><ul><li><strong>Lunes:</strong> Empuje (Push) - Pecho, Hombro, Tríceps (Dominadas, Fondos)</li><li><strong>Miércoles:</strong> Tracción (Pull) - Espalda, Bíceps (Dominadas, Remo)</li><li><strong>Viernes:</strong> Piernas y Core (Pistol Squats, L-Sit)</li></ul>`}
       },
       diets: {
-          'balanced': { title: 'Dieta Balanceada', macros: 'P 30% • C 45% • G 25%', details: `<h3>Ejemplo de Menú (1 Día)</h3><ul><li><strong>Desayuno:</strong> Avena con frutas y proteína.</li><li><strong>Comida:</strong> Pollo a la plancha con quinoa y ensalada.</li><li><strong>Cena:</strong> Salmón al horno con batata y brócoli.</li></ul>`},
-          'keto': { title: 'Dieta Cetogénica', macros: 'P 20% • C 10% • G 70%', details: `<h3>Ejemplo de Menú (1 Día)</h3><ul><li><strong>Desayuno:</strong> Huevos revueltos con aguacate.</li><li><strong>Comida:</strong> Ensalada de ternera, aceite de oliva y nueces.</li><li><strong>Cena:</strong> Muslos de pollo al curry con coliflor.</li></ul>`},
-          'vegan': { title: 'Dieta Vegana', macros: 'P 25% • C 55% • G 20%', details: `<h3>Ejemplo de Menú (1 Día)</h3><ul><li><strong>Desayuno:</strong> Tofu revuelto con pan integral.</li><li><strong>Comida:</strong> Bol de garbanzos, lentejas y arroz.</li><li><strong>Cena:</strong> Curry de lentejas rojas y espinacas.</li></ul>`}
+          'balanced': { title: 'Dieta Balanceada', macros: [30, 45, 25], details: `<h3>Ejemplo de Menú (1 Día)</h3><ul><li><strong>Desayuno:</strong> Avena con frutas y proteína.</li><li><strong>Comida:</strong> Pollo a la plancha con quinoa y ensalada.</li><li><strong>Cena:</strong> Salmón al horno con batata y brócoli.</li></ul>`},
+          'keto': { title: 'Dieta Cetogénica', macros: [20, 10, 70], details: `<h3>Ejemplo de Menú (1 Día)</h3><ul><li><strong>Desayuno:</strong> Huevos revueltos con aguacate.</li><li><strong>Comida:</strong> Ensalada de ternera, aceite de oliva y nueces.</li><li><strong>Cena:</strong> Muslos de pollo al curry con coliflor.</li></ul>`},
+          'vegan': { title: 'Dieta Vegana', macros: [25, 55, 20], details: `<h3>Ejemplo de Menú (1 Día)</h3><ul><li><strong>Desayuno:</strong> Tofu revuelto con pan integral.</li><li><strong>Comida:</strong> Bol de garbanzos, lentejas y arroz.</li><li><strong>Cena:</strong> Curry de lentejas rojas y espinacas.</li></ul>`},
+          'intermittent': { title: 'Ayuno Intermitente 16/8', macros: [35, 40, 25], details: `<h3>Ventana de Alimentación (8 horas)</h3><p>Comer solo entre las 12:00 PM y las 8:00 PM, manteniendo ayuno las 16 horas restantes. Énfasis en alimentos nutritivos y proteína alta.</p><ul><li><strong>Comida (12:00 PM):</strong> Gran ensalada con atún y aceite de oliva.</li><li><strong>Cena (7:30 PM):</strong> Pollo con arroz y verduras.</li></ul>`}
       }
   };
 
@@ -859,7 +833,7 @@
   let areDietChartsInitialized = false;
   let isProgressChartInitialized = false;
   let progressChart;
-  let chartBalanced, chartKeto, chartVegan;
+  let chartBalanced, chartKeto, chartVegan, chartIntermittent;
   
   // ==================== AOS init ====================
   AOS.init({once:true, duration:700});
@@ -889,7 +863,7 @@
           });
       }
       
-      // INICIALIZACIÓN DE GRÁFICOS (ARREGLO DE ERROR)
+      // Función 4: Inicialización dinámica de gráficos (Mejora de rendimiento)
       if (pageId === 'page-diario' && !isProgressChartInitialized) {
           initProgressChart();
       }
@@ -946,11 +920,6 @@
       const customGender = document.getElementById('wiz-custom-gender').value;
       const activity = document.getElementById('wiz-activity').value;
       const dietId = document.getElementById('wiz-diet').value;
-      
-      const custom1 = document.getElementById('wiz-custom-1').value.trim();
-      const custom2 = document.getElementById('wiz-custom-2').value.trim();
-      const custom3 = document.getElementById('wiz-custom-3').value.trim();
-
 
       if (!name || !age || !height || !weight) {
           return alert('Por favor, completa tu nombre, edad, altura y peso.');
@@ -960,9 +929,6 @@
       const profile = { age, height, weight, sex, customGender, activity, goal: wizardData.goal };
       localStorage.setItem('fitlife_profile', JSON.stringify(profile));
       
-      localStorage.setItem('fitlife_custom_trackers', JSON.stringify([custom1, custom2, custom3]));
-      loadCustomTrackers(); // Actualiza los inputs de Perfil
-
       if(dietId) {
           const dietName = DATABASE.diets[dietId]?.title || 'Balanceada';
           selectDiet(dietName, dietId, true);
@@ -976,6 +942,7 @@
       
       loadProfile();
       welcomeAssistant();
+      loadTrackerItems(); // Carga los ítems por defecto y los personalizados
   }
 
   // ====================
@@ -1038,6 +1005,12 @@
       const u = JSON.parse(localStorage.getItem('fitlife_user') || 'null');
       const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
       
+      // Actualizar el estado de planes y dietas en la vista
+      document.querySelectorAll('.plan').forEach(el => el.classList.remove('active-plan'));
+      document.querySelectorAll('.diet-card').forEach(el => el.classList.remove('active-diet'));
+      document.querySelectorAll('.plan strong.active-status').forEach(el => el.remove());
+      document.querySelectorAll('.diet-card strong.active-status').forEach(el => el.remove());
+
       if (p && u) {
           document.getElementById('profile-card-name').textContent = u.name;
           document.getElementById('profile-card-height').textContent = p.height || '--';
@@ -1058,7 +1031,6 @@
 
           calculateIMC(); 
           calculateCalories(p.activity, p.goal);
-          loadCustomTrackers(); // Carga las opciones personalizadas
       } else {
           document.getElementById('profile-card-name').textContent = 'Completa tu Perfil';
           document.getElementById('profile-card-height').textContent = '--';
@@ -1067,50 +1039,26 @@
       }
 
       const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null'); 
-      if(d) document.getElementById('selectedDiet').textContent = d.name;
+      if(d) {
+          document.getElementById('selectedDiet').textContent = d.name;
+          const dietCard = document.querySelector(`.diet-card[data-diet-id="${d.id}"]`);
+          if (dietCard) {
+              dietCard.classList.add('active-diet');
+              dietCard.querySelector('.diet-info').innerHTML += '<strong class="active-status">✅ Dieta Activa</strong>';
+          }
+      }
       else document.getElementById('selectedDiet').textContent = 'Ninguna';
 
       const p_plan = JSON.parse(localStorage.getItem('fitlife_selected_plan') || 'null');
-      if(p_plan) document.getElementById('selectedPlan').textContent = p_plan.name;
-      else document.getElementById('selectedPlan').textContent = 'Ninguno';
-  }
-
-  // ====================
-  // Lógica de Seguimiento Personalizado
-  // ====================
-  function saveCustomTrackers() {
-      const c1 = document.getElementById('custom-1').value.trim();
-      const c2 = document.getElementById('custom-2').value.trim();
-      const c3 = document.getElementById('custom-3').value.trim();
-      localStorage.setItem('fitlife_custom_trackers', JSON.stringify([c1, c2, c3]));
-      renderCustomTrackers([c1, c2, c3]);
-  }
-  
-  function loadCustomTrackers() {
-      const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
-      
-      // Cargar en el panel de Perfil
-      document.getElementById('custom-1').value = customs[0];
-      document.getElementById('custom-2').value = customs[1];
-      document.getElementById('custom-3').value = customs[2];
-      
-      // Renderizar en el Diario (Inicio)
-      renderCustomTrackers(customs);
-  }
-
-  function renderCustomTrackers(customs) {
-      const mobileContainer = document.getElementById('tracker-custom-mobile');
-      const desktopContainer = document.getElementById('tracker-custom-desktop');
-      mobileContainer.innerHTML = '';
-      desktopContainer.innerHTML = '';
-      
-      customs.forEach((label, index) => {
-          if (label) {
-              const html = `<div class="tracker-item"> <input type="checkbox" id="track-custom-${index + 1}"> <label for="track-custom-${index + 1}">${label}</label> </div>`;
-              mobileContainer.innerHTML += html;
-              desktopContainer.innerHTML += `<div class="tracker-item"> <input type="checkbox" id="track-custom-${index + 1}-desktop"> <label for="track-custom-${index + 1}-desktop">${label}</label> </div>`;
+      if(p_plan) {
+          document.getElementById('selectedPlan').textContent = p_plan.name;
+          const planCard = document.querySelector(`.plan[data-plan-id="${p_plan.id}"]`);
+          if (planCard) {
+              planCard.classList.add('active-plan');
+              planCard.querySelector('p').innerHTML += '<strong class="active-status">✅ Plan Activo</strong>';
           }
-      });
+      }
+      else document.getElementById('selectedPlan').textContent = 'Ninguno';
   }
 
   // ====================
@@ -1182,6 +1130,7 @@
         return;
     }
     let tmb = 0;
+    // Fórmula de Harris-Benedict revisada
     if(sex==='male') tmb = 10*weight + 6.25*height - 5*age + 5;
     else tmb = 10*weight + 6.25*height - 5*age - 161; // 'female' o 'other'
     
@@ -1208,9 +1157,18 @@
 
   function initDietCharts() {
       if (areDietChartsInitialized) return;
-      chartBalanced = makeDoughnut('chart-balanced',[30,45,25],['Proteínas','Carbohidratos','Grasas'],['#3b82f6','#fb923c','#10b981']);
-      chartKeto = makeDoughnut('chart-keto',[20,10,70],['Proteínas','Carbohidratos','Grasas'],['#3b82f6','#fb923c','#10b981']);
-      chartVegan = makeDoughnut('chart-vegan',[25,55,20],['Proteínas','Carbohidratos','Grasas'],['#3b82f6','#fb923c','#10b981']);
+      const [bP, bC, bG] = DATABASE.diets.balanced.macros;
+      const [kP, kC, kG] = DATABASE.diets.keto.macros;
+      const [vP, vC, vG] = DATABASE.diets.vegan.macros;
+      const [iP, iC, iG] = DATABASE.diets.intermittent.macros;
+
+      const colors = ['#3b82f6','#fb923c','#10b981']; // P, C, G
+
+      chartBalanced = makeDoughnut('chart-balanced',[bP, bC, bG],['Proteínas','Carbohidratos','Grasas'],colors);
+      chartKeto = makeDoughnut('chart-keto',[kP, kC, kG],['Proteínas','Carbohidratos','Grasas'],colors);
+      chartVegan = makeDoughnut('chart-vegan',[vP, vC, vG],['Proteínas','Carbohidratos','Grasas'],colors);
+      chartIntermittent = makeDoughnut('chart-intermittent',[iP, iC, iG],['Proteínas','Carbohidratos','Grasas'],colors);
+
       areDietChartsInitialized = true;
   }
 
@@ -1245,9 +1203,12 @@
     arr.push({date:label,weight:val});
     localStorage.setItem('fitlife_progress', JSON.stringify(arr));
     
-    progressChart.data.labels.push(label); 
-    progressChart.data.datasets[0].data.push(val); 
-    progressChart.update();
+    // Si el gráfico ya está inicializado (Función 4: inicialización dinámica)
+    if (progressChart) {
+        progressChart.data.labels.push(label); 
+        progressChart.data.datasets[0].data.push(val); 
+        progressChart.update();
+    }
     
     document.getElementById('pesoInput').value='';
     document.getElementById('weight').value = val;
@@ -1280,9 +1241,10 @@
 
   function showDietDetails(dietId) {
       const diet = DATABASE.diets[dietId]; if (!diet) return;
+      const [P, C, G] = diet.macros;
       modalTitle.textContent = diet.title;
       modalBody.innerHTML = `
-          <p><span class="badge">Macros: ${diet.macros}</span></p>
+          <p><span class="badge">Macros: P ${P}% • C ${C}% • G ${G}%</span></p>
           <hr style="border-color:var(--glass); margin: 15px 0;">
           ${diet.details}
       `;
@@ -1294,22 +1256,20 @@
   // Funciones de Selección y Guardado
   // ====================
   function selectDiet(name, dietId, silent = false){
-    document.getElementById('selectedDiet').textContent = name;
     localStorage.setItem('fitlife_selected_diet', JSON.stringify({id: dietId, name: name}));
+    loadProfile(); // Función 2: Recarga el perfil para mostrar el status activo
     if(!silent) alert('Dieta "'+name+'" seleccionada y guardada.');
-    loadProfile();
   }
 
   function selectPlan(planId, name){
-    document.getElementById('selectedPlan').textContent = name;
     localStorage.setItem('fitlife_selected_plan', JSON.stringify({id: planId, name: name}));
+    loadProfile(); // Función 2: Recarga el perfil para mostrar el status activo
     alert('Plan "'+name+'" seleccionado y guardado.');
-    loadProfile();
     closeDetailsModal();
   }
 
   // ====================
-  // Asistente de Chat
+  // Asistente de Chat (Sin cambios en lógica, solo estructura)
   // ====================
   const messagesEl = document.getElementById('messages');
   function appendMessage(text, who='bot'){
@@ -1395,80 +1355,64 @@
       }
       
       journalLogEl.innerHTML = '';
-      journal.reverse().forEach(entry => {
+      journal.reverse().forEach((entry, index) => {
           const entryEl = document.createElement('div');
           entryEl.className = 'log-entry';
+          
           let summary = `<ul>`;
-          
-          if (entry.workout) summary += `<li>✅ Entrenaste.</li>`;
-          if (entry.diet) summary += `<li>✅ Seguiste tu dieta.</li>`;
-          if (entry.water) summary += `<li>✅ Bebiste 2L de agua.</li>`;
-          // Nuevas opciones fijas
-          if (entry.sleep) summary += `<li>✅ Dormiste 7+ horas.</li>`;
-          if (entry.fruit) summary += `<li>✅ Comiste 5 porciones de verdura/fruta.</li>`;
-          if (entry.stretch) summary += `<li>✅ Hiciste estiramientos.</li>`;
-          if (entry.meditate) summary += `<li>✅ Meditaste.</li>`;
-          if (entry.supplement) summary += `<li>✅ Tomaste tu suplemento.</li>`;
-          
-          // Opciones personalizadas
-          const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
-          customs.forEach((label, index) => {
-              const key = `custom${index + 1}`;
-              if (label && entry[key]) {
-                  summary += `<li>✅ ${label}</li>`;
-              }
-          });
-          
+          if (entry.trackerItems) {
+              entry.trackerItems.forEach(item => {
+                  summary += `<li>${item.checked ? '✅' : '❌'} ${item.label}</li>`;
+              });
+          }
           if (entry.calories) summary += `<li>Consumiste aprox. <strong>${entry.calories} kcal</strong>.</li>`;
-          
+          if (summary === `<ul>`) summary += `<li>No se registraron actividades este día.</li>`;
           summary += `</ul>`;
-          entryEl.innerHTML = `<div class="log-entry-date">${entry.date}</div>${summary}`;
+          
+          const deleteButton = `<button class="btn danger" style="padding: 5px 10px; font-size: 0.7rem; margin-left: 10px; flex-shrink: 0;" onclick="deleteJournalEntry('${entry.date}')"><i class="fa-solid fa-trash-can"></i></button>`;
+
+          entryEl.innerHTML = `
+            <div class="log-entry-content">
+                <div class="log-entry-date">${entry.date}</div>${summary}
+            </div>
+            ${deleteButton}
+          `;
           journalLogEl.appendChild(entryEl);
       });
   }
-
-  function completeDay(isDesktop = false) {
-      let water, workout, diet, calories, sleep, fruit, stretch, meditate, supplement, custom1, custom2, custom3;
-      
-      const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
-      
-      if(isDesktop) {
-          water = document.getElementById('track-water-desktop').checked;
-          workout = document.getElementById('track-workout-desktop').checked;
-          diet = document.getElementById('track-diet-desktop').checked;
-          calories = document.getElementById('track-calories-desktop').value;
-          // Nuevas opciones
-          sleep = document.getElementById('track-sleep-desktop').checked;
-          fruit = document.getElementById('track-fruit-desktop').checked;
-          stretch = document.getElementById('track-stretch-desktop').checked;
-          meditate = document.getElementById('track-meditate-desktop').checked;
-          supplement = document.getElementById('track-supplement-desktop').checked;
-          // Personalizadas
-          custom1 = customs[0] ? document.getElementById('track-custom-1-desktop').checked : false;
-          custom2 = customs[1] ? document.getElementById('track-custom-2-desktop').checked : false;
-          custom3 = customs[2] ? document.getElementById('track-custom-3-desktop').checked : false;
-      } else {
-          water = document.getElementById('track-water').checked;
-          workout = document.getElementById('track-workout').checked;
-          diet = document.getElementById('track-diet').checked;
-          calories = document.getElementById('track-calories').value;
-          // Nuevas opciones
-          sleep = document.getElementById('track-sleep').checked;
-          fruit = document.getElementById('track-fruit').checked;
-          stretch = document.getElementById('track-stretch').checked;
-          meditate = document.getElementById('track-meditate').checked;
-          supplement = document.getElementById('track-supplement').checked;
-          // Personalizadas
-          custom1 = customs[0] ? document.getElementById('track-custom-1').checked : false;
-          custom2 = customs[1] ? document.getElementById('track-custom-2').checked : false;
-          custom3 = customs[2] ? document.getElementById('track-custom-3').checked : false;
+  
+  // Función 1: Borrar ítem del diario
+  function deleteJournalEntry(dateToDelete) {
+      if (!confirm(`¿Estás seguro de que quieres borrar la entrada del diario del ${dateToDelete}?`)) {
+          return;
       }
+      let journal = JSON.parse(localStorage.getItem('fitlife_journal') || '[]');
+      journal = journal.filter(entry => entry.date !== dateToDelete);
+      localStorage.setItem('fitlife_journal', JSON.stringify(journal));
+      loadJournal();
+  }
+
+  function getTrackerState(isDesktop) {
+      const listId = isDesktop ? 'tracker-items-list-desktop' : 'tracker-items-list';
+      const listEl = document.getElementById(listId);
+      const items = [];
+      listEl.querySelectorAll('.tracker-item').forEach(itemEl => {
+          const checkbox = itemEl.querySelector('input[type="checkbox"]');
+          const label = itemEl.querySelector('label').textContent.trim();
+          items.push({ label, checked: checkbox.checked });
+      });
+      return items;
+  }
+
+  function completeDay(isDesktop) {
+      const trackerItemsState = getTrackerState(isDesktop);
+      const calories = isDesktop ? document.getElementById('track-calories-desktop').value : document.getElementById('track-calories').value;
       
       const journal = JSON.parse(localStorage.getItem('fitlife_journal') || '[]');
       const today = new Date().toLocaleDateString();
 
       const existingIndex = journal.findIndex(entry => entry.date === today);
-      const newEntry = { date: today, water, workout, diet, calories, sleep, fruit, stretch, meditate, supplement, custom1, custom2, custom3 };
+      const newEntry = { date: today, trackerItems: trackerItemsState, calories: calories || null };
 
       if (existingIndex > -1) journal[existingIndex] = newEntry;
       else journal.push(newEntry);
@@ -1476,22 +1420,85 @@
       localStorage.setItem('fitlife_journal', JSON.stringify(journal));
       alert('¡Día completado! Tu progreso ha sido guardado en el diario.');
 
-      // Limpiar y resetear
-      const cleanupIds = [
-          'track-water', 'track-workout', 'track-diet', 'track-calories',
-          'track-water-desktop', 'track-workout-desktop', 'track-diet-desktop', 'track-calories-desktop',
-          'track-sleep', 'track-fruit', 'track-stretch', 'track-meditate', 'track-supplement',
-          'track-sleep-desktop', 'track-fruit-desktop', 'track-stretch-desktop', 'track-meditate-desktop', 'track-supplement-desktop',
-      ];
-      cleanupIds.forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el[el.type === 'checkbox' ? 'checked' : 'value'] = el.type === 'checkbox' ? false : '';
-      });
-      // Limpiar personalizados (usando selectores CSS para los que existen)
-      document.querySelectorAll('#tracker-custom-mobile input[type="checkbox"]').forEach(el => el.checked = false);
-      document.querySelectorAll('#tracker-custom-desktop input[type="checkbox"]').forEach(el => el.checked = false);
+      // Reinicia los checkboxes y campos, pero mantiene los ítems personalizados
+      document.querySelectorAll('#tracker-mobile-card input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('#tracker-desktop-card input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.getElementById('track-calories').value = '';
+      document.getElementById('track-calories-desktop').value = '';
 
       loadJournal();
+  }
+  
+  // ====================
+  // Seguimiento Personalizado
+  // ====================
+  function loadTrackerItems() {
+      const defaultItems = [
+          { label: 'Bebí 2L de agua', id: 'track-water' },
+          { label: 'Entrené hoy', id: 'track-workout' },
+          { label: 'Seguí mi dieta', id: 'track-diet' }
+      ];
+      
+      const customItems = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '[]');
+      
+      const renderTrackerList = (listId, isDesktop) => {
+          const listEl = document.getElementById(listId);
+          if (!listEl) return;
+          
+          listEl.innerHTML = '';
+          const itemsToRender = [...defaultItems, ...customItems];
+          
+          itemsToRender.forEach((item, index) => {
+              const uniqueId = item.id || `custom-track-${index}`;
+              const itemEl = document.createElement('div');
+              itemEl.className = 'tracker-item';
+              if (!item.id) itemEl.setAttribute('data-custom', 'true'); // Marca los personalizados
+              
+              let deleteBtn = '';
+              if (!item.id) { // Solo para ítems personalizados
+                  deleteBtn = `<button class="btn danger" style="padding: 5px 8px; font-size: 0.7rem;" onclick="removeCustomTrackerItem('${item.label}', ${isDesktop})"><i class="fa-solid fa-xmark"></i></button>`;
+              }
+
+              itemEl.innerHTML = `
+                  <input type="checkbox" id="${uniqueId}-${isDesktop ? 'd' : 'm'}">
+                  <label for="${uniqueId}-${isDesktop ? 'd' : 'm'}">${item.label}</label>
+                  ${deleteBtn}
+              `;
+              listEl.appendChild(itemEl);
+          });
+      };
+      
+      renderTrackerList('tracker-items-list', false);
+      renderTrackerList('tracker-items-list-desktop', true);
+  }
+
+  function addCustomTrackerItem(isDesktop = false) {
+      const inputId = isDesktop ? 'customTrackerInputDesktop' : 'customTrackerInput';
+      const inputEl = document.getElementById(inputId);
+      const label = inputEl.value.trim();
+
+      if (!label) return alert('Por favor, ingresa el nombre de tu nuevo ítem de seguimiento.');
+      
+      const customItems = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '[]');
+      if (customItems.some(item => item.label === label)) {
+          return alert('Ese ítem ya existe.');
+      }
+
+      customItems.push({ label: label, id: Date.now().toString() });
+      localStorage.setItem('fitlife_custom_trackers', JSON.stringify(customItems));
+      inputEl.value = '';
+      loadTrackerItems(); // Recarga ambas listas (móvil y desktop)
+      alert(`Ítem "${label}" agregado a tu seguimiento.`);
+  }
+
+  function removeCustomTrackerItem(labelToRemove, isDesktop) {
+      if (!confirm(`¿Estás seguro de que quieres eliminar "${labelToRemove}" de tu seguimiento?`)) {
+          return;
+      }
+      let customItems = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '[]');
+      customItems = customItems.filter(item => item.label !== labelToRemove);
+      localStorage.setItem('fitlife_custom_trackers', JSON.stringify(customItems));
+      loadTrackerItems(); // Recarga ambas listas (móvil y desktop)
   }
 
   // ====================
@@ -1510,6 +1517,7 @@
     const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
     const mobileThemeBtn = document.getElementById('mobile-theme-btn');
     const mobileClearDataBtn = document.getElementById('mobile-clear-data-btn');
+    const openAssistantQuick = document.getElementById('openAssistantQuick'); // Función 5
 
     // --- 2. Cargar Estado Inicial ---
     const savedTheme = localStorage.getItem('fitlife_theme') || 'dark';
@@ -1526,9 +1534,9 @@
     }
     
     loadJournal();
-    loadCustomTrackers(); // Asegura que los rastreadores estén cargados
     welcomeAssistant();
     initProfilePic();
+    loadTrackerItems(); // Carga los ítems de seguimiento
 
     showPage('page-inicio', document.querySelector('.desktop-nav a'));
 
@@ -1548,7 +1556,8 @@
 
     // Control de Perfil
     function openProfileEditor() {
-        // Cargar datos del perfil en el wizard (para edición)
+        // La lógica del wizard es compleja, reabrir el modal inicia el proceso de nuevo
+        // pero cargamos los datos antes.
         const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
         if (p) {
             document.getElementById('wiz-name').value = JSON.parse(localStorage.getItem('fitlife_user') || '{}').name || '';
@@ -1566,18 +1575,13 @@
             const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null');
             if (d) document.getElementById('wiz-diet').value = d.id;
         }
-        // Cargar objetivos personalizados en el wizard
-        const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
-        document.getElementById('wiz-custom-1').value = customs[0];
-        document.getElementById('wiz-custom-2').value = customs[1];
-        document.getElementById('wiz-custom-3').value = customs[2];
-
         showWizard();
     }
     openRegister.addEventListener('click', openProfileEditor);
     editProfileBtn.addEventListener('click', () => {
         const metricsCard = document.getElementById('calculadora');
-        showPage('page-perfil', document.getElementById('nav-perfil'));
+        showPage('page-perfil');
+        // Scroll y animación para la tarjeta de métricas
         metricsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         metricsCard.style.transition = 'all 0.3s ease';
         metricsCard.style.boxShadow = '0 0 25px var(--accent)';
@@ -1585,15 +1589,17 @@
             metricsCard.style.boxShadow = '0 6px 22px rgba(2,6,23,0.25)';
         }, 1500);
     });
-    
-    // Asigna el evento para el botón en el menú móvil (ahora solo existe en el menú de hamburguesa)
-    const mobileProfileBtn = document.getElementById('mobile-profile-btn');
-    if (mobileProfileBtn) {
-        mobileProfileBtn.addEventListener('click', () => {
-            closeMobileMenu();
-            openProfileEditor();
-        });
-    }
+    // Si la pestaña "perfil" tiene un botón para abrir el wizard, es mejor que usemos 'openRegister'
+
+    // Función 5: Botón Rápido para Abrir Asistente (Desktop)
+    openAssistantQuick.addEventListener('click', () => {
+        showPage('page-inicio');
+        const chatCard = document.querySelector('.card:last-child');
+        if (chatCard) {
+            chatCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('chatInput').focus();
+        }
+    });
 
     // Lógica del Menú Móvil (Hamburguesa)
     function openMobileMenu() {
@@ -1609,9 +1615,10 @@
             closeMobileMenu();
         }
     });
+    // Función 3: Opción de borrar datos en el móvil
     mobileClearDataBtn.addEventListener('click', () => {
         closeMobileMenu();
-        if(confirm('¿Estás seguro de que quieres borrar todos tus datos guardados (perfil, progreso, diario)?')){
+        if(confirm('🚨 ADVERTENCIA: ¿Estás seguro de que quieres borrar **TODOS** tus datos guardados (perfil, progreso, diario)? Esta acción es irreversible.')){
             localStorage.clear();
             location.reload();
         }
