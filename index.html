@@ -178,6 +178,7 @@
       padding: 18px 28px; border-top: 1px solid var(--glass);
       display: flex; justify-content: flex-end;
     }
+    .modal-content .form-row { margin-bottom: 5px; } /* Ajuste de espacio en modales */
 
     /* Menú Móvil (Hamburguesa) */
     #mobile-menu-overlay { justify-content: flex-end; z-index: 110; }
@@ -330,8 +331,9 @@
       <a onclick="showPage('page-inicio', this)" class="active">Inicio</a>
       <a onclick="showPage('page-diario', this)">Diario</a>
       <a onclick="showPage('page-planes', this)">Planes</a>
+      <a onclick="showPage('page-comunidad', this)">Comunidad</a>
       <a onclick="showPage('page-perfil', this)">Perfil</a>
-      <a onclick="showPage('page-ayuda', this)">Ayuda</a>
+      <a onclick="showPage('page-info', this)">Info</a>
     </nav>
     <div class="desktop-controls">
       <button id="themeToggle" class="btn secondary" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
@@ -371,6 +373,15 @@
                         <div class="tracker-item"> <input type="checkbox" id="track-water"> <label for="track-water">Bebí 2L de agua</label> </div>
                         <div class="tracker-item"> <input type="checkbox" id="track-workout"> <label for="track-workout">Entrené hoy</label> </div>
                         <div class="tracker-item"> <input type="checkbox" id="track-diet"> <label for="track-diet">Seguí mi dieta</label> </div>
+                        <hr style="border-color:var(--glass); margin: 8px 0;">
+                        <div class="tracker-item"> <input type="checkbox" id="track-sleep"> <label for="track-sleep">Dormí al menos 7 horas</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-fruit"> <label for="track-fruit">Comí 5 porciones de verdura/fruta</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-stretch"> <label for="track-stretch">Hice estiramientos / movilidad</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-meditate"> <label for="track-meditate">Medité 10 minutos</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-supplement"> <label for="track-supplement">Tomé mi suplemento (ej. proteína)</label> </div>
+                        <hr style="border-color:var(--glass); margin: 8px 0;">
+                        <div id="tracker-custom-mobile"></div>
+
                         <hr style="border-color:var(--glass); margin: 12px 0;">
                         <div class="form-row"> <input type="number" id="track-calories" placeholder="Calorías consumidas (ej: 1800)"> </div>
                         <button class="btn" style="width:100%" onclick="completeDay()">Completar Día</button>
@@ -397,6 +408,15 @@
                         <div class="tracker-item"> <input type="checkbox" id="track-water-desktop"> <label for="track-water-desktop">Bebí 2L de agua</label> </div>
                         <div class="tracker-item"> <input type="checkbox" id="track-workout-desktop"> <label for="track-workout-desktop">Entrené hoy</label> </div>
                         <div class="tracker-item"> <input type="checkbox" id="track-diet-desktop"> <label for="track-diet-desktop">Seguí mi dieta</label> </div>
+                        <hr style="border-color:var(--glass); margin: 8px 0;">
+                        <div class="tracker-item"> <input type="checkbox" id="track-sleep-desktop"> <label for="track-sleep-desktop">Dormí al menos 7 horas</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-fruit-desktop"> <label for="track-fruit-desktop">Comí 5 porciones de verdura/fruta</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-stretch-desktop"> <label for="track-stretch-desktop">Hice estiramientos / movilidad</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-meditate-desktop"> <label for="track-meditate-desktop">Medité 10 minutos</label> </div>
+                        <div class="tracker-item"> <input type="checkbox" id="track-supplement-desktop"> <label for="track-supplement-desktop">Tomé mi suplemento (ej. proteína)</label> </div>
+                        <hr style="border-color:var(--glass); margin: 8px 0;">
+                        <div id="tracker-custom-desktop"></div>
+
                         <hr style="border-color:var(--glass); margin: 12px 0;">
                         <div class="form-row"> <input type="number" id="track-calories-desktop" placeholder="Calorías consumidas (ej: 1800)"> </div>
                         <button class="btn" style="width:100%" onclick="completeDay(true)">Completar Día</button>
@@ -495,6 +515,27 @@
         </div>
     </div>
 
+    <div id="page-comunidad" class="tab-page">
+        <div class="content-stack">
+            <div class="card" data-aos="fade-up">
+                <h3>Comunidad FitLifes¡GO!</h3>
+                <p><strong>¡Esta es tu sección social!</strong> Aquí podrás ver los logros de otros usuarios, participar en retos virtuales y compartir tus avances. (Función en desarrollo...)</p>
+                <div style="padding:15px; border: 1px dashed var(--accent); border-radius:10px; margin-top:15px;">
+                    <h4>Reto Semanal de Sentadillas</h4>
+                    <p>Únete a la comunidad y completa 100 sentadillas en 5 días. 🏋️‍♀️</p>
+                    <button class="btn secondary">Unirme al Reto (Simulado)</button>
+                </div>
+                <h4 style="margin-top:20px">Publicaciones Recientes</h4>
+                <div style="background:var(--glass); padding:15px; border-radius:8px; margin-bottom:10px;">
+                    <strong>@fitness_pro12:</strong> ¡Logré mi objetivo de 50kg levantados en press banca! Gracias FitLifes¡GO! 💪
+                </div>
+                <div style="background:var(--glass); padding:15px; border-radius:8px;">
+                    <strong>@dieta_keto:</strong> Mi IMC bajó de 28.1 a 27.9 esta semana. ¡El gráfico de progreso ayuda mucho! 📉
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="page-perfil" class="tab-page">
         <div class="content-stack">
             
@@ -539,13 +580,28 @@
                 <p>Calorías objetivo: <strong id="targetCalories">—</strong></p>
               </div>
             </div>
+
+            <div id="custom-tracker-settings" class="card" data-aos="fade-up">
+                <h3>Objetivos Personalizados del Diario</h3>
+                <p>Define hasta 3 objetivos para tu seguimiento diario. Se guardan al instante.</p>
+                <div class="form-row">
+                    <input id="custom-1" type="text" placeholder="Objetivo 1 (ej: Leer 10 páginas)" onchange="saveCustomTrackers()">
+                </div>
+                <div class="form-row">
+                    <input id="custom-2" type="text" placeholder="Objetivo 2 (ej: Llamar a mi madre)" onchange="saveCustomTrackers()">
+                </div>
+                <div class="form-row">
+                    <input id="custom-3" type="text" placeholder="Objetivo 3 (ej: Preparar la comida de mañana)" onchange="saveCustomTrackers()">
+                </div>
+            </div>
+
         </div>
     </div>
     
-    <div id="page-ayuda" class="tab-page">
+    <div id="page-info" class="tab-page">
         <div class="content-stack">
             <div class="card" data-aos="fade-up">
-                <h3>Ayuda</h3>
+                <h3>Información y Ayuda</h3>
                 <p>¿No sabes cómo empezar? Vuelve a ver el tutorial.</p>
                 <button class="btn" onclick="startTutorial()">Ver Mini-Tutorial</button>
             </div>
@@ -594,9 +650,9 @@
             <i class="fa-solid fa-book-bookmark"></i>
             <span>Planes</span>
         </button>
-        <button id="nav-ayuda" class="tab-btn" onclick="showPage('page-ayuda', this)">
-            <i class="fa-solid fa-circle-question"></i>
-            <span>Ayuda</span>
+        <button id="nav-comunidad" class="tab-btn" onclick="showPage('page-comunidad', this)">
+            <i class="fa-solid fa-users"></i>
+            <span>Comunidad</span>
         </button>
         <button id="nav-perfil" class="tab-btn" onclick="showPage('page-perfil', this)">
             <i class="fa-solid fa-user"></i>
@@ -607,129 +663,159 @@
 
   <div id="wizard-modal" class="modal-overlay">
     <div class="modal-content">
-      <div id="step-1" class="wizard-step active">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¡Bienvenido a FitLifes¡GO!</h2>
-          <p>Vamos a configurar tu perfil. Esto solo tomará un minuto y nos ayudará a personalizar tu experiencia.</p>
-          <div class="wizard-nav">
-              <span></span> <button class="btn" onclick="nextStep(2)">Comenzar</button>
-          </div>
-      </div>
-      <div id="step-2" class="wizard-step">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¿Cuál es tu objetivo principal?</h2>
-          <div class="wizard-options">
-              <div class="option" id="goal-lose" onclick="selectWizardOption('goal', 'lose')">Perder Peso</div>
-              <div class="option" id="goal-maintain" onclick="selectWizardOption('goal', 'maintain')">Mantener Peso</div>
-              <div class="option" id="goal-gain" onclick="selectWizardOption('goal', 'gain')">Ganar Músculo</div>
-          </div>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="prevStep(1)">Atrás</button>
-              <button class="btn" onclick="nextStep(3)">Siguiente</button>
-          </div>
-      </div>
-      <div id="step-3" class="wizard-step">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Cuéntanos sobre ti</h2>
-          <p>Usaremos esto para calcular tus calorías, IMC y TMB.</p>
-          <div class="form-row">
-              <input id="wiz-name" type="text" placeholder="Tu Nombre" />
-              <select id="wiz-sex" onchange="checkCustomGender('wiz-sex', 'wiz-custom-gender-wrapper')">
-                  <option value="male">Hombre</option>
-                  <option value="female">Mujer</option>
-                  <option value="other">Otro</option>
-              </select>
-          </div>
-          <div id="wiz-custom-gender-wrapper" class="form-row" style="display:none; margin-top:-5px; margin-bottom:10px;">
-              <input id="wiz-custom-gender" type="text" placeholder="¿Cómo te identificas? (opcional)">
-          </div>
-          <div class="form-row">
-              <input id="wiz-age" type="number" placeholder="Edad" />
-              <input id="wiz-height" type="text" placeholder="Altura (cm o 1.72)" />
-              <input id="wiz-weight" type="number" placeholder="Peso (kg)" />
-          </div>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="prevStep(2)">Atrás</button>
-              <button class="btn" onclick="nextStep(4)">Siguiente</button>
-          </div>
-      </div>
-      <div id="step-4" class="wizard-step">
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Tu Estilo de Vida</h2>
-          <p>Nivel de Actividad Física:</p>
-          <select id="wiz-activity" style="width:100%; margin-bottom: 12px;">
-              <option value="1.2">Sedentario (poco o nada)</option>
-              <option value="1.375">Ligero (1-3 días/semana)</option>
-              <option value="1.55">Moderado (3-5 días/semana)</option>
-              <option value="1.725">Activo (6-7 días/semana)</option>
-              <option value="1.9">Muy activo (trabajo físico + ejercicio)</option>
-          </select>
-          <p>Preferencia de Dieta (Opcional):</p>
-          <select id="wiz-diet" style="width:100%">
-              <option value="">Ninguna en especial</option>
-              <option value="balanced">Balanceada</option>
-              <option value="keto">Cetogénica</option>
-              <option value="vegan">Vegana</option>
-          </select>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="prevStep(3)">Atrás</button>
-              <button class="btn" onclick="completeWizard()">Finalizar</button>
-          </div>
+      <div class="modal-body" style="flex:1;">
+        <div id="step-1" class="wizard-step active">
+            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¡Bienvenido a FitLifes¡GO!</h2>
+            <p>Vamos a configurar tu perfil. Esto solo tomará un minuto y nos ayudará a personalizar tu experiencia.</p>
+            <div class="wizard-nav">
+                <span></span> <button class="btn" onclick="nextStep(2)">Comenzar</button>
+            </div>
+        </div>
+        <div id="step-2" class="wizard-step">
+            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">¿Cuál es tu objetivo principal?</h2>
+            <div class="wizard-options">
+                <div class="option" id="goal-lose" onclick="selectWizardOption('goal', 'lose')">Perder Peso</div>
+                <div class="option" id="goal-maintain" onclick="selectWizardOption('goal', 'maintain')">Mantener Peso</div>
+                <div class="option" id="goal-gain" onclick="selectWizardOption('goal', 'gain')">Ganar Músculo</div>
+            </div>
+            <div class="wizard-nav">
+                <button class="btn secondary" onclick="prevStep(1)">Atrás</button>
+                <button class="btn" onclick="nextStep(3)">Siguiente</button>
+            </div>
+        </div>
+        <div id="step-3" class="wizard-step">
+            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Cuéntanos sobre ti</h2>
+            <p>Usaremos esto para calcular tus calorías, IMC y TMB.</p>
+            <div class="form-row">
+                <input id="wiz-name" type="text" placeholder="Tu Nombre" />
+                <select id="wiz-sex" onchange="checkCustomGender('wiz-sex', 'wiz-custom-gender-wrapper')">
+                    <option value="male">Hombre</option>
+                    <option value="female">Mujer</option>
+                    <option value="other">Otro</option>
+                </select>
+            </div>
+            <div id="wiz-custom-gender-wrapper" class="form-row" style="display:none; margin-top:-5px; margin-bottom:10px;">
+                <input id="wiz-custom-gender" type="text" placeholder="¿Cómo te identificas? (opcional)">
+            </div>
+            <div class="form-row">
+                <input id="wiz-age" type="number" placeholder="Edad" />
+                <input id="wiz-height" type="text" placeholder="Altura (cm o 1.72)" />
+                <input id="wiz-weight" type="number" placeholder="Peso (kg)" />
+            </div>
+            <div class="wizard-nav">
+                <button class="btn secondary" onclick="prevStep(2)">Atrás</button>
+                <button class="btn" onclick="nextStep(4)">Siguiente</button>
+            </div>
+        </div>
+        <div id="step-4" class="wizard-step">
+            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Tu Estilo de Vida</h2>
+            <p>Nivel de Actividad Física:</p>
+            <select id="wiz-activity" style="width:100%; margin-bottom: 12px;">
+                <option value="1.2">Sedentario (poco o nada)</option>
+                <option value="1.375">Ligero (1-3 días/semana)</option>
+                <option value="1.55">Moderado (3-5 días/semana)</option>
+                <option value="1.725">Activo (6-7 días/semana)</option>
+                <option value="1.9">Muy activo (trabajo físico + ejercicio)</option>
+            </select>
+            <p>Preferencia de Dieta (Opcional):</p>
+            <select id="wiz-diet" style="width:100%">
+                <option value="">Ninguna en especial</option>
+                <option value="balanced">Balanceada</option>
+                <option value="keto">Cetogénica</option>
+                <option value="vegan">Vegana</option>
+            </select>
+            <div class="wizard-nav">
+                <button class="btn secondary" onclick="prevStep(3)">Atrás</button>
+                <button class="btn" onclick="nextStep(5)">Siguiente</button>
+            </div>
+        </div>
+        <div id="step-5" class="wizard-step">
+            <h2 class="modal-header" style="color:var(--accent); padding:0; border:0;">Objetivos Adicionales</h2>
+            <p>Define hasta 3 objetivos personales para hacerles seguimiento diario:</p>
+            <div class="form-row">
+                <input id="wiz-custom-1" type="text" placeholder="Objetivo 1 (ej: Leer 10 páginas)">
+            </div>
+            <div class="form-row">
+                <input id="wiz-custom-2" type="text" placeholder="Objetivo 2 (ej: Llamar a un amigo)">
+            </div>
+            <div class="form-row">
+                <input id="wiz-custom-3" type="text" placeholder="Objetivo 3 (ej: Estudiar para el examen)">
+            </div>
+            <div class="wizard-nav">
+                <button class="btn secondary" onclick="prevStep(4)">Atrás</button>
+                <button class="btn" onclick="completeWizard()">Finalizar</button>
+            </div>
+        </div>
       </div>
     </div>
   </div>
 
   <div id="tutorial-modal" class="modal-overlay">
     <div class="modal-content">
-      <div id="tut-step-1" class="wizard-step active" style="text-align:center;">
-          <i class="fa-solid fa-rocket" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">¡Todo listo!</h2>
-          <p>Te damos un tour rápido por tu nueva app.</p>
-          <div class="wizard-nav">
-              <span></span> <button class="btn" onclick="showTutorialStep(2)">Siguiente</button>
-          </div>
-      </div>
-      <div id="tut-step-2" class="wizard-step" style="text-align:center;">
-          <i class="fa-solid fa-house" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Inicio"</h2>
-          <p>Aquí tienes tu vista principal: tu panel rápido (en escritorio), el registro de "Mi Día" y el Asistente. Es tu centro de operaciones.</p>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="showTutorialStep(1)">Atrás</button>
-              <button class="btn" onclick="showTutorialStep(3)">Siguiente</button>
-          </div>
-      </div>
-      <div id="tut-step-3" class="wizard-step" style="text-align:center;">
-          <i class="fa-solid fa-chart-line" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Diario"</h2>
-          <p>Aquí verás tu progreso. Revisa tu historial de actividades y mira cómo avanza tu peso en el gráfico.</p>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="showTutorialStep(2)">Atrás</button>
-              <button class="btn" onclick="showTutorialStep(4)">Siguiente</button>
-          </div>
-      </div>
-      <div id="tut-step-4" class="wizard-step" style="text-align:center;">
-          <i class="fa-solid fa-book-bookmark" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Planes"</h2>
-          <p>Explora y selecciona los planes de entrenamiento y las dietas que quieras seguir. ¡Todos son gratis!</p>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="showTutorialStep(3)">Atrás</button>
-              <button class="btn" onclick="showTutorialStep(5)">Siguiente</button>
-          </div>
-      </div>
-      <div id="tut-step-5" class="wizard-step" style="text-align:center;">
-          <i class="fa-solid fa-user" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Perfil"</h2>
-          <p>¡Este eres tú! Aquí puedes ver tu foto, tus estadísticas y editar tus métricas de peso, altura y más.</p>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="showTutorialStep(4)">Atrás</button>
-              <button class="btn" onclick="showTutorialStep(6)">Siguiente</button>
-          </div>
-      </div>
-      <div id="tut-step-6" class="wizard-step" style="text-align:center;">
-          <i class="fa-solid fa-circle-question" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
-          <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Ayuda"</h2>
-          <p>Si alguna vez te pierdes, aquí puedes volver a ver este tutorial, contactarnos o ver los créditos. ¡Estás listo para empezar!</p>
-          <div class="wizard-nav">
-              <button class="btn secondary" onclick="showTutorialStep(5)">Atrás</button>
-              <button class="btn" onclick="closeTutorial()">¡Entendido!</button>
-          </div>
-      </div>
+        <div class="modal-body" style="flex:1; display: flex; flex-direction: column; justify-content: center;">
+            <div id="tut-step-1" class="wizard-step active" style="text-align:center;">
+                <i class="fa-solid fa-rocket" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">¡Todo listo!</h2>
+                <p>Te damos un tour rápido por tu nueva app.</p>
+                <div class="wizard-nav">
+                    <span></span> <button class="btn" onclick="showTutorialStep(2)">Siguiente</button>
+                </div>
+            </div>
+            <div id="tut-step-2" class="wizard-step" style="text-align:center;">
+                <i class="fa-solid fa-house" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Inicio"</h2>
+                <p>Aquí tienes tu vista principal: tu panel rápido (en escritorio), el registro de "Mi Día" con **más opciones** y el Asistente.</p>
+                <div class="wizard-nav">
+                    <button class="btn secondary" onclick="showTutorialStep(1)">Atrás</button>
+                    <button class="btn" onclick="showTutorialStep(3)">Siguiente</button>
+                </div>
+            </div>
+            <div id="tut-step-3" class="wizard-step" style="text-align:center;">
+                <i class="fa-solid fa-chart-line" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Diario"</h2>
+                <p>Aquí verás tu progreso. Revisa tu historial de actividades y mira cómo avanza tu peso en el gráfico.</p>
+                <div class="wizard-nav">
+                    <button class="btn secondary" onclick="showTutorialStep(2)">Atrás</button>
+                    <button class="btn" onclick="showTutorialStep(4)">Siguiente</button>
+                </div>
+            </div>
+            <div id="tut-step-4" class="wizard-step" style="text-align:center;">
+                <i class="fa-solid fa-book-bookmark" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Planes"</h2>
+                <p>Explora y selecciona los planes de entrenamiento y las dietas que quieras seguir. ¡Todos son gratis!</p>
+                <div class="wizard-nav">
+                    <button class="btn secondary" onclick="showTutorialStep(3)">Atrás</button>
+                    <button class="btn" onclick="showTutorialStep(5)">Siguiente</button>
+                </div>
+            </div>
+            <div id="tut-step-5" class="wizard-step" style="text-align:center;">
+                <i class="fa-solid fa-users" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Comunidad"</h2>
+                <p>Una nueva sección social para compartir logros y participar en retos. (Simulada por ahora).</p>
+                <div class="wizard-nav">
+                    <button class="btn secondary" onclick="showTutorialStep(4)">Atrás</button>
+                    <button class="btn" onclick="showTutorialStep(6)">Siguiente</button>
+                </div>
+            </div>
+            <div id="tut-step-6" class="wizard-step" style="text-align:center;">
+                <i class="fa-solid fa-user" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Perfil"</h2>
+                <p>Aquí puedes ver y editar tus métricas, ¡y también definir tus **objetivos de seguimiento personalizados**!</p>
+                <div class="wizard-nav">
+                    <button class="btn secondary" onclick="showTutorialStep(5)">Atrás</button>
+                    <button class="btn" onclick="showTutorialStep(7)">Siguiente</button>
+                </div>
+            </div>
+            <div id="tut-step-7" class="wizard-step" style="text-align:center;">
+                <i class="fa-solid fa-circle-question" style="font-size:3rem; color:var(--accent); margin-bottom:10px;"></i>
+                <h2 class="modal-header" style="color:var(--accent); padding:0; border:0; justify-content:center;">Pestaña "Info"</h2>
+                <p>Si alguna vez te pierdes, aquí puedes volver a ver este tutorial, contactarnos o ver los créditos. ¡Estás listo para empezar!</p>
+                <div class="wizard-nav">
+                    <button class="btn secondary" onclick="showTutorialStep(6)">Atrás</button>
+                    <button class="btn" onclick="closeTutorial()">¡Entendido!</button>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 
@@ -860,6 +946,11 @@
       const customGender = document.getElementById('wiz-custom-gender').value;
       const activity = document.getElementById('wiz-activity').value;
       const dietId = document.getElementById('wiz-diet').value;
+      
+      const custom1 = document.getElementById('wiz-custom-1').value.trim();
+      const custom2 = document.getElementById('wiz-custom-2').value.trim();
+      const custom3 = document.getElementById('wiz-custom-3').value.trim();
+
 
       if (!name || !age || !height || !weight) {
           return alert('Por favor, completa tu nombre, edad, altura y peso.');
@@ -869,6 +960,9 @@
       const profile = { age, height, weight, sex, customGender, activity, goal: wizardData.goal };
       localStorage.setItem('fitlife_profile', JSON.stringify(profile));
       
+      localStorage.setItem('fitlife_custom_trackers', JSON.stringify([custom1, custom2, custom3]));
+      loadCustomTrackers(); // Actualiza los inputs de Perfil
+
       if(dietId) {
           const dietName = DATABASE.diets[dietId]?.title || 'Balanceada';
           selectDiet(dietName, dietId, true);
@@ -917,9 +1011,9 @@
   // Lógica de Perfil y Carga
   // ====================
   function saveProfile(){
-    const age = document.getElementById('age').value;
+    const age = Number(document.getElementById('age').value);
     let height = processHeight(document.getElementById('height').value);
-    const weight = document.getElementById('weight').value;
+    const weight = Number(document.getElementById('weight').value);
     const sex = document.getElementById('sex').value;
     const customGender = document.getElementById('custom-gender').value;
 
@@ -964,6 +1058,7 @@
 
           calculateIMC(); 
           calculateCalories(p.activity, p.goal);
+          loadCustomTrackers(); // Carga las opciones personalizadas
       } else {
           document.getElementById('profile-card-name').textContent = 'Completa tu Perfil';
           document.getElementById('profile-card-height').textContent = '--';
@@ -978,6 +1073,44 @@
       const p_plan = JSON.parse(localStorage.getItem('fitlife_selected_plan') || 'null');
       if(p_plan) document.getElementById('selectedPlan').textContent = p_plan.name;
       else document.getElementById('selectedPlan').textContent = 'Ninguno';
+  }
+
+  // ====================
+  // Lógica de Seguimiento Personalizado
+  // ====================
+  function saveCustomTrackers() {
+      const c1 = document.getElementById('custom-1').value.trim();
+      const c2 = document.getElementById('custom-2').value.trim();
+      const c3 = document.getElementById('custom-3').value.trim();
+      localStorage.setItem('fitlife_custom_trackers', JSON.stringify([c1, c2, c3]));
+      renderCustomTrackers([c1, c2, c3]);
+  }
+  
+  function loadCustomTrackers() {
+      const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
+      
+      // Cargar en el panel de Perfil
+      document.getElementById('custom-1').value = customs[0];
+      document.getElementById('custom-2').value = customs[1];
+      document.getElementById('custom-3').value = customs[2];
+      
+      // Renderizar en el Diario (Inicio)
+      renderCustomTrackers(customs);
+  }
+
+  function renderCustomTrackers(customs) {
+      const mobileContainer = document.getElementById('tracker-custom-mobile');
+      const desktopContainer = document.getElementById('tracker-custom-desktop');
+      mobileContainer.innerHTML = '';
+      desktopContainer.innerHTML = '';
+      
+      customs.forEach((label, index) => {
+          if (label) {
+              const html = `<div class="tracker-item"> <input type="checkbox" id="track-custom-${index + 1}"> <label for="track-custom-${index + 1}">${label}</label> </div>`;
+              mobileContainer.innerHTML += html;
+              desktopContainer.innerHTML += `<div class="tracker-item"> <input type="checkbox" id="track-custom-${index + 1}-desktop"> <label for="track-custom-${index + 1}-desktop">${label}</label> </div>`;
+          }
+      });
   }
 
   // ====================
@@ -1266,13 +1399,28 @@
           const entryEl = document.createElement('div');
           entryEl.className = 'log-entry';
           let summary = `<ul>`;
+          
           if (entry.workout) summary += `<li>✅ Entrenaste.</li>`;
           if (entry.diet) summary += `<li>✅ Seguiste tu dieta.</li>`;
           if (entry.water) summary += `<li>✅ Bebiste 2L de agua.</li>`;
+          // Nuevas opciones fijas
+          if (entry.sleep) summary += `<li>✅ Dormiste 7+ horas.</li>`;
+          if (entry.fruit) summary += `<li>✅ Comiste 5 porciones de verdura/fruta.</li>`;
+          if (entry.stretch) summary += `<li>✅ Hiciste estiramientos.</li>`;
+          if (entry.meditate) summary += `<li>✅ Meditaste.</li>`;
+          if (entry.supplement) summary += `<li>✅ Tomaste tu suplemento.</li>`;
+          
+          // Opciones personalizadas
+          const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
+          customs.forEach((label, index) => {
+              const key = `custom${index + 1}`;
+              if (label && entry[key]) {
+                  summary += `<li>✅ ${label}</li>`;
+              }
+          });
+          
           if (entry.calories) summary += `<li>Consumiste aprox. <strong>${entry.calories} kcal</strong>.</li>`;
-          if (!entry.workout && !entry.diet && !entry.water && !entry.calories) {
-              summary += `<li>No se registraron actividades este día.</li>`;
-          }
+          
           summary += `</ul>`;
           entryEl.innerHTML = `<div class="log-entry-date">${entry.date}</div>${summary}`;
           journalLogEl.appendChild(entryEl);
@@ -1280,25 +1428,47 @@
   }
 
   function completeDay(isDesktop = false) {
-      let water, workout, diet, calories;
+      let water, workout, diet, calories, sleep, fruit, stretch, meditate, supplement, custom1, custom2, custom3;
+      
+      const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
       
       if(isDesktop) {
           water = document.getElementById('track-water-desktop').checked;
           workout = document.getElementById('track-workout-desktop').checked;
           diet = document.getElementById('track-diet-desktop').checked;
           calories = document.getElementById('track-calories-desktop').value;
+          // Nuevas opciones
+          sleep = document.getElementById('track-sleep-desktop').checked;
+          fruit = document.getElementById('track-fruit-desktop').checked;
+          stretch = document.getElementById('track-stretch-desktop').checked;
+          meditate = document.getElementById('track-meditate-desktop').checked;
+          supplement = document.getElementById('track-supplement-desktop').checked;
+          // Personalizadas
+          custom1 = customs[0] ? document.getElementById('track-custom-1-desktop').checked : false;
+          custom2 = customs[1] ? document.getElementById('track-custom-2-desktop').checked : false;
+          custom3 = customs[2] ? document.getElementById('track-custom-3-desktop').checked : false;
       } else {
           water = document.getElementById('track-water').checked;
           workout = document.getElementById('track-workout').checked;
           diet = document.getElementById('track-diet').checked;
           calories = document.getElementById('track-calories').value;
+          // Nuevas opciones
+          sleep = document.getElementById('track-sleep').checked;
+          fruit = document.getElementById('track-fruit').checked;
+          stretch = document.getElementById('track-stretch').checked;
+          meditate = document.getElementById('track-meditate').checked;
+          supplement = document.getElementById('track-supplement').checked;
+          // Personalizadas
+          custom1 = customs[0] ? document.getElementById('track-custom-1').checked : false;
+          custom2 = customs[1] ? document.getElementById('track-custom-2').checked : false;
+          custom3 = customs[2] ? document.getElementById('track-custom-3').checked : false;
       }
       
       const journal = JSON.parse(localStorage.getItem('fitlife_journal') || '[]');
       const today = new Date().toLocaleDateString();
 
       const existingIndex = journal.findIndex(entry => entry.date === today);
-      const newEntry = { date: today, water, workout, diet, calories };
+      const newEntry = { date: today, water, workout, diet, calories, sleep, fruit, stretch, meditate, supplement, custom1, custom2, custom3 };
 
       if (existingIndex > -1) journal[existingIndex] = newEntry;
       else journal.push(newEntry);
@@ -1306,15 +1476,22 @@
       localStorage.setItem('fitlife_journal', JSON.stringify(journal));
       alert('¡Día completado! Tu progreso ha sido guardado en el diario.');
 
+      // Limpiar y resetear
+      const cleanupIds = [
+          'track-water', 'track-workout', 'track-diet', 'track-calories',
+          'track-water-desktop', 'track-workout-desktop', 'track-diet-desktop', 'track-calories-desktop',
+          'track-sleep', 'track-fruit', 'track-stretch', 'track-meditate', 'track-supplement',
+          'track-sleep-desktop', 'track-fruit-desktop', 'track-stretch-desktop', 'track-meditate-desktop', 'track-supplement-desktop',
+      ];
+      cleanupIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el[el.type === 'checkbox' ? 'checked' : 'value'] = el.type === 'checkbox' ? false : '';
+      });
+      // Limpiar personalizados (usando selectores CSS para los que existen)
+      document.querySelectorAll('#tracker-custom-mobile input[type="checkbox"]').forEach(el => el.checked = false);
+      document.querySelectorAll('#tracker-custom-desktop input[type="checkbox"]').forEach(el => el.checked = false);
+
       loadJournal();
-      document.getElementById('track-water').checked = false;
-      document.getElementById('track-workout').checked = false;
-      document.getElementById('track-diet').checked = false;
-      document.getElementById('track-calories').value = '';
-      document.getElementById('track-water-desktop').checked = false;
-      document.getElementById('track-workout-desktop').checked = false;
-      document.getElementById('track-diet-desktop').checked = false;
-      document.getElementById('track-calories-desktop').value = '';
   }
 
   // ====================
@@ -1349,6 +1526,7 @@
     }
     
     loadJournal();
+    loadCustomTrackers(); // Asegura que los rastreadores estén cargados
     welcomeAssistant();
     initProfilePic();
 
@@ -1370,6 +1548,7 @@
 
     // Control de Perfil
     function openProfileEditor() {
+        // Cargar datos del perfil en el wizard (para edición)
         const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
         if (p) {
             document.getElementById('wiz-name').value = JSON.parse(localStorage.getItem('fitlife_user') || '{}').name || '';
@@ -1387,11 +1566,18 @@
             const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null');
             if (d) document.getElementById('wiz-diet').value = d.id;
         }
+        // Cargar objetivos personalizados en el wizard
+        const customs = JSON.parse(localStorage.getItem('fitlife_custom_trackers') || '["", "", ""]');
+        document.getElementById('wiz-custom-1').value = customs[0];
+        document.getElementById('wiz-custom-2').value = customs[1];
+        document.getElementById('wiz-custom-3').value = customs[2];
+
         showWizard();
     }
     openRegister.addEventListener('click', openProfileEditor);
     editProfileBtn.addEventListener('click', () => {
         const metricsCard = document.getElementById('calculadora');
+        showPage('page-perfil', document.getElementById('nav-perfil'));
         metricsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         metricsCard.style.transition = 'all 0.3s ease';
         metricsCard.style.boxShadow = '0 0 25px var(--accent)';
@@ -1399,10 +1585,15 @@
             metricsCard.style.boxShadow = '0 6px 22px rgba(2,6,23,0.25)';
         }, 1500);
     });
-    document.getElementById('mobile-profile-btn').addEventListener('click', () => {
-        closeMobileMenu();
-        openProfileEditor();
-    });
+    
+    // Asigna el evento para el botón en el menú móvil (ahora solo existe en el menú de hamburguesa)
+    const mobileProfileBtn = document.getElementById('mobile-profile-btn');
+    if (mobileProfileBtn) {
+        mobileProfileBtn.addEventListener('click', () => {
+            closeMobileMenu();
+            openProfileEditor();
+        });
+    }
 
     // Lógica del Menú Móvil (Hamburguesa)
     function openMobileMenu() {
