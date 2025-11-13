@@ -843,7 +843,6 @@
       }
   }
 
-  // Función de ayuda para altura
   function processHeight(heightStr) {
       let height = String(heightStr).replace(',', '.');
       if (height && parseFloat(height) > 0 && parseFloat(height) < 3) {
@@ -917,9 +916,6 @@
   // ====================
   // Lógica de Perfil y Carga
   // ====================
-  const openRegister = document.getElementById('openRegister');
-  const editProfileBtn = document.getElementById('edit-profile-btn');
-
   function saveProfile(){
     const age = document.getElementById('age').value;
     let height = processHeight(document.getElementById('height').value);
@@ -941,7 +937,6 @@
     loadProfile();
     document.getElementById('height').value = height;
   }
-  document.getElementById('saveProfile').addEventListener('click', saveProfile);
   
   function loadProfile() {
       loadProfilePic();
@@ -1312,7 +1307,6 @@
       alert('¡Día completado! Tu progreso ha sido guardado en el diario.');
 
       loadJournal();
-      // Limpiar ambos formularios
       document.getElementById('track-water').checked = false;
       document.getElementById('track-workout').checked = false;
       document.getElementById('track-diet').checked = false;
@@ -1323,17 +1317,28 @@
       document.getElementById('track-calories-desktop').value = '';
   }
 
-
   // ====================
   // Lógica de Carga Inicial y Controles
   // ====================
-  const themeToggle = document.getElementById('themeToggle');
-
+  
+  // ARREGLO: Mover todos los event listeners a la carga de la ventana
   window.addEventListener('load', ()=>{
+    
+    // --- 1. Definir Elementos ---
+    const themeToggle = document.getElementById('themeToggle');
+    const openRegister = document.getElementById('openRegister');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+    const mobileThemeBtn = document.getElementById('mobile-theme-btn');
+    const mobileClearDataBtn = document.getElementById('mobile-clear-data-btn');
+
+    // --- 2. Cargar Estado Inicial ---
     const savedTheme = localStorage.getItem('fitlife_theme') || 'dark';
     document.body.setAttribute('data-theme', savedTheme);
     themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-    document.getElementById('mobile-theme-btn').innerHTML = savedTheme === 'light' ? 'Tema: Claro' : 'Tema: Oscuro';
+    mobileThemeBtn.innerHTML = savedTheme === 'light' ? 'Tema: Claro' : 'Tema: Oscuro';
 
     const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
     if(p) {
@@ -1348,87 +1353,80 @@
     initProfilePic();
 
     showPage('page-inicio', document.querySelector('.desktop-nav a'));
-  });
 
-  // Control de Tema
-  function toggleTheme() {
-    const el = document.body;
-    const cur = el.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    el.setAttribute('data-theme', cur);
-    localStorage.setItem('fitlife_theme', cur);
-    themeToggle.innerHTML = cur === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-    document.getElementById('mobile-theme-btn').innerHTML = cur === 'light' ? 'Tema: Claro' : 'Tema: Oscuro';
-  }
-  themeToggle.addEventListener('click', toggleTheme);
-  
-  // Control de Perfil
-  function openProfileEditor() {
-      const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
-      if (p) {
-          document.getElementById('wiz-name').value = JSON.parse(localStorage.getItem('fitlife_user') || '{}').name || '';
-          document.getElementById('wiz-sex').value = p.sex;
-          document.getElementById('wiz-age').value = p.age;
-          document.getElementById('wiz-height').value = p.height;
-          document.getElementById('wiz-weight').value = p.weight;
-          document.getElementById('wiz-activity').value = p.activity;
-          selectWizardOption('goal', p.goal);
-          
-          checkCustomGender('wiz-sex', 'wiz-custom-gender-wrapper');
-          if (p.sex === 'other' && p.customGender) {
-              document.getElementById('wiz-custom-gender').value = p.customGender;
-          }
-          const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null');
-          if (d) document.getElementById('wiz-diet').value = d.id;
-      }
-      showWizard();
-  }
-  // Asignar eventos a los botones de perfil
-  openRegister.addEventListener('click', openProfileEditor);
-  editProfileBtn.addEventListener('click', () => {
-      // Al hacer clic en "Editar Perfil", lleva a la tarjeta de métricas
-      const metricsCard = document.getElementById('calculadora');
-      metricsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      metricsCard.style.transition = 'all 0.3s ease';
-      metricsCard.style.boxShadow = '0 0 25px var(--accent)';
-      setTimeout(() => {
-          metricsCard.style.boxShadow = '0 6px 22px rgba(2,6,23,0.25)';
-      }, 1500);
-  });
-  document.getElementById('mobile-profile-btn').addEventListener('click', () => {
-      closeMobileMenu();
-      openProfileEditor();
-  });
+    // --- 3. Asignar Event Listeners ---
+    
+    // Control de Tema
+    function toggleTheme() {
+      const el = document.body;
+      const cur = el.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      el.setAttribute('data-theme', cur);
+      localStorage.setItem('fitlife_theme', cur);
+      themeToggle.innerHTML = cur === 'light' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+      mobileThemeBtn.innerHTML = cur === 'light' ? 'Tema: Claro' : 'Tema: Oscuro';
+    }
+    themeToggle.addEventListener('click', toggleTheme);
+    mobileThemeBtn.addEventListener('click', toggleTheme);
 
+    // Control de Perfil
+    function openProfileEditor() {
+        const p = JSON.parse(localStorage.getItem('fitlife_profile') || 'null');
+        if (p) {
+            document.getElementById('wiz-name').value = JSON.parse(localStorage.getItem('fitlife_user') || '{}').name || '';
+            document.getElementById('wiz-sex').value = p.sex;
+            document.getElementById('wiz-age').value = p.age;
+            document.getElementById('wiz-height').value = p.height;
+            document.getElementById('wiz-weight').value = p.weight;
+            document.getElementById('wiz-activity').value = p.activity;
+            selectWizardOption('goal', p.goal);
+            
+            checkCustomGender('wiz-sex', 'wiz-custom-gender-wrapper');
+            if (p.sex === 'other' && p.customGender) {
+                document.getElementById('wiz-custom-gender').value = p.customGender;
+            }
+            const d = JSON.parse(localStorage.getItem('fitlife_selected_diet') || 'null');
+            if (d) document.getElementById('wiz-diet').value = d.id;
+        }
+        showWizard();
+    }
+    openRegister.addEventListener('click', openProfileEditor);
+    editProfileBtn.addEventListener('click', () => {
+        const metricsCard = document.getElementById('calculadora');
+        metricsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        metricsCard.style.transition = 'all 0.3s ease';
+        metricsCard.style.boxShadow = '0 0 25px var(--accent)';
+        setTimeout(() => {
+            metricsCard.style.boxShadow = '0 6px 22px rgba(2,6,23,0.25)';
+        }, 1500);
+    });
+    document.getElementById('mobile-profile-btn').addEventListener('click', () => {
+        closeMobileMenu();
+        openProfileEditor();
+    });
 
-  // ====================
-  // Lógica del Menú Móvil (Hamburguesa)
-  // ====================
-  const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-  
-  function openMobileMenu() {
-      mobileMenuOverlay.classList.add('visible');
-  }
-  function closeMobileMenu() {
-      mobileMenuOverlay.classList.remove('visible');
-  }
-
-  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu);
-  document.getElementById('mobile-menu-close').addEventListener('click', closeMobileMenu);
-  mobileMenuOverlay.addEventListener('click', (e) => {
-      if (e.target === mobileMenuOverlay) {
-          closeMobileMenu();
-      }
-  });
-  document.getElementById('mobile-theme-btn').addEventListener('click', () => {
-      toggleTheme();
-  });
-  document.getElementById('mobile-clear-data-btn').addEventListener('click', () => {
-      closeMobileMenu();
-      if(confirm('¿Estás seguro de que quieres borrar todos tus datos guardados (perfil, progreso, diario)?')){
-          localStorage.clear();
-          location.reload();
-      }
-  });
+    // Lógica del Menú Móvil (Hamburguesa)
+    function openMobileMenu() {
+        mobileMenuOverlay.classList.add('visible');
+    }
+    function closeMobileMenu() {
+        mobileMenuOverlay.classList.remove('visible');
+    }
+    mobileMenuBtn.addEventListener('click', openMobileMenu);
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.addEventListener('click', (e) => {
+        if (e.target === mobileMenuOverlay) {
+            closeMobileMenu();
+        }
+    });
+    mobileClearDataBtn.addEventListener('click', () => {
+        closeMobileMenu();
+        if(confirm('¿Estás seguro de que quieres borrar todos tus datos guardados (perfil, progreso, diario)?')){
+            localStorage.clear();
+            location.reload();
+        }
+    });
+    
+  }); // Fin del window.addEventListener('load')
 
 </script>
 </body>
